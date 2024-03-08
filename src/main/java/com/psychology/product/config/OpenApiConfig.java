@@ -12,18 +12,18 @@ import io.swagger.v3.oas.annotations.servers.Server;
 @OpenAPIDefinition(
         info = @Info(
                 contact = @Contact(
-                        name = "Artur Hasparian",
-                        email = "a.hasparian@gmail.com",
-                        url = "https://localhost:8080"
+                        name = "${developer.contact.names}",
+                        email = "${developer.contact.email}",
+                        url = "${application.server.host}:${application.server.port}"
                 ),
                 description = "OpenApi documentation for Spring Security",
-                title = "OpenApi specification - Psychology Platform",
+                title = "OpenApi specification - ${application.name}",
                 version = "1.0"
         ),
         servers = {
                 @Server(
-                        description = "Local Server",
-                        url = "http://localhost:8080"
+                        description = "${application.name}",
+                        url = "${application.server.host}:${application.server.port}"
                 ),
         },
         security = {
