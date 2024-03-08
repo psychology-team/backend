@@ -47,7 +47,7 @@ Localhost: https://localhost
 
 ### API
 
-Localhost URL: https://localhost/swagger-ui/index.html
+Localhost URL: https://localhost
 
 ## Top  Contributors
 
