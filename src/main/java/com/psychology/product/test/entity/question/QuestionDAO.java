@@ -1,5 +1,6 @@
-package com.psychology.product.block.test.entities;
+package com.psychology.product.test.entity.question;
 
+import com.psychology.product.test.entity.answer.AnswerDAO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -15,7 +16,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Table(name = "questions")
 
-public class Question {
+public class QuestionDAO {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -27,6 +28,6 @@ public class Question {
     private String questionText;
 
     @Transient
-    private List<Answer> answerList;
+    private List<AnswerDAO> answerDAOList;
 
 }

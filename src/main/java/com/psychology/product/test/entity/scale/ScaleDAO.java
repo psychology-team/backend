@@ -1,4 +1,4 @@
-package com.psychology.product.block.test.entities;
+package com.psychology.product.test.entity.scale;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -14,7 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Table(name = "scales")
 
-public class Scale {
+public class ScaleDAO {
 
     @Id
     @GeneratedValue(generator = "UUID")

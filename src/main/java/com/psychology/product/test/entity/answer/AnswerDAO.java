@@ -1,5 +1,8 @@
-package com.psychology.product.block.test.entities;
+package com.psychology.product.test.entity.answer;
 
+import com.psychology.product.test.entity.interpretation.InterpretationDAO;
+import com.psychology.product.test.entity.question.QuestionDAO;
+import com.psychology.product.test.entity.scale.ScaleDAO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -14,7 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Table(name = "answers")
 
-public class Answer {
+public class AnswerDAO {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -28,16 +31,16 @@ public class Answer {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "question_id")
-    private Question question;
+    private QuestionDAO questionDAO;
 
     @NotNull
     @OneToOne
     @JoinColumn(name = "scale_id")
-    private Scale scale;
+    private ScaleDAO scaleDAO;
 
     @NotNull
     @OneToOne
     @JoinColumn(name = "interpretation_id")
-    private Interpretation interpretation;
+    private InterpretationDAO interpretationDAO;
 
 }
