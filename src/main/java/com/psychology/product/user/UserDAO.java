@@ -43,7 +43,7 @@ public class UserDAO implements Serializable {
     @Column(name = "enabled")
     private boolean enabled;
 
-    @Column(name = "treated_timestamp")
+    @Column(name = "created_timestamp")
     private Instant createdTimestamp;
 
     @Enumerated(EnumType.STRING)
