@@ -59,6 +59,12 @@ dependencies {
     implementation("org.postgresql", "postgresql", "42.7.1")
     runtimeOnly("org.postgresql", "postgresql")
 
+    // Authentication
+    val jjwt = "0.12.3"
+    implementation("io.jsonwebtoken", "jjwt-api", jjwt)
+    implementation("io.jsonwebtoken", "jjwt-impl", jjwt)
+    implementation("io.jsonwebtoken", "jjwt-jackson", jjwt)
+
     // Utilities
     implementation("org.jetbrains", "annotations", "24.1.0")
     implementation("org.springdoc",  "springdoc-openapi-starter-webmvc-ui",  "2.3.0")

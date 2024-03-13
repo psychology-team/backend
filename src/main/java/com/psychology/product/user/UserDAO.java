@@ -41,7 +41,7 @@ public class UserDAO implements Serializable {
     private String phone;
 
     @Column(name = "enabled")
-    private boolean enabled;
+    private Boolean enabled;
 
     @Column(name = "created_timestamp")
     private Instant createdTimestamp;
