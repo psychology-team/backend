@@ -1,5 +1,6 @@
 package com.psychology.product.user;
 
+import com.psychology.product.diagnostic.userdiagnosticresult.UserDiagnosticResultDAO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import java.io.Serializable;
 import java.sql.Types;
 import java.time.Instant;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -22,7 +24,7 @@ public class UserDAO implements Serializable {
 
     @Id
     @GeneratedValue(generator = "UUID")
-    @Column(name = "id", updatable = false, nullable = false)
+    @Column(name = "user_id", updatable = false, nullable = false)
     private UUID id;
 
     @Column(name = "first_name")
@@ -49,5 +51,9 @@ public class UserDAO implements Serializable {
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(Types.ARRAY)
     private Set<UserAuthority> authorities;
+
+    @Transient
+    @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL)
+    private List<UserDiagnosticResultDAO> diagnosticResultDAOList;
 
 }
