@@ -41,7 +41,7 @@ public class JwtUtils {
         final Date expiration = new Date(new Date().getTime() + jwtAccessExpirationMs);
 
         return Jwts.builder()
-                .claim("id", userPrincipal.user().getId())
+                .claim("id", userPrincipal.getUser().getId())
                 .subject((userPrincipal.getUsername()))
                 .issuedAt(new Date())
                 .expiration(expiration)

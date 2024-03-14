@@ -60,7 +60,7 @@ dependencies {
     runtimeOnly("org.postgresql", "postgresql")
 
     // Authentication
-    val jjwt = "0.12.3"
+    val jjwt = "0.12.5"
     implementation("io.jsonwebtoken", "jjwt-api", jjwt)
     implementation("io.jsonwebtoken", "jjwt-impl", jjwt)
     implementation("io.jsonwebtoken", "jjwt-jackson", jjwt)

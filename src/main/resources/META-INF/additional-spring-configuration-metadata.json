@@ -9,5 +9,15 @@
       "name": "jwt.secret.refresh.expirationMs",
       "type": "java.lang.String",
       "description": "Description for jwt.secret.refresh.expirationMs."
+    },
+    {
+      "name": "jwt.secret.access",
+      "type": "java.lang.String",
+      "description": "Description for jwt.secret.access."
+    },
+    {
+      "name": "jwt.secret.refresh",
+      "type": "java.lang.String",
+      "description": "Description for jwt.secret.refresh."
     }
   ] }

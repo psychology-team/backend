@@ -1,11 +1,18 @@
 package com.psychology.product.user;
 
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
-public record UserDetailsImpl(UserDAO user) implements UserDetails {
+@Data
+public class UserDetailsImpl implements UserDetails {
+
+    private UserDAO user;
+
+    public UserDetailsImpl(UserDAO user) {
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
