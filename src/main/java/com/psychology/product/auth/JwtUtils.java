@@ -62,10 +62,10 @@ public class JwtUtils {
 
     public String getEmailFromJwtToken(String token) {
         return Jwts.parser()
-                .setSigningKey(jwtAccessSecret)
+                .verifyWith((SecretKey) jwtAccessSecret)
                 .build()
-                .parseClaimsJws(token)
-                .getBody()
+                .parseSignedClaims(token)
+                .getPayload()
                 .getSubject();
     }
 
@@ -83,7 +83,7 @@ public class JwtUtils {
 
     public boolean validateJwtToken(@NonNull String token, @NonNull Key secret) {
         try {
-            Jwts.parser().setSigningKey(secret).build().parse(token);
+            Jwts.parser().verifyWith((SecretKey) secret).build().parse(token);
             return true;
         } catch (Exception e) {
             if (e instanceof ExpiredJwtException) return false;
@@ -95,9 +95,10 @@ public class JwtUtils {
 
     private Claims getClaims(@NonNull String token, @NonNull Key jwtRefreshSecret) {
         return Jwts.parser()
-                .setSigningKey(jwtRefreshSecret)
+                .verifyWith((SecretKey) jwtRefreshSecret)
+                .decryptWith((SecretKey) jwtRefreshSecret)
                 .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .parseSignedClaims(token)
+                .getPayload();
     }
 }
