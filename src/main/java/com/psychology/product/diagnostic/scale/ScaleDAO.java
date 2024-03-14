@@ -1,7 +1,6 @@
-package com.psychology.product.test.entity.scale;
+package com.psychology.product.diagnostic.scale;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,7 +20,6 @@ public class ScaleDAO {
     @Column(name = "scale_id", updatable = false, nullable = false)
     private UUID id;
 
-    @NotNull
     @Column(name = "scale_name")
     private String scaleName;
 

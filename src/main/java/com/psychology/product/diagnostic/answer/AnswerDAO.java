@@ -1,10 +1,7 @@
-package com.psychology.product.test.entity.answer;
+package com.psychology.product.diagnostic.answer;
 
-import com.psychology.product.test.entity.interpretation.InterpretationDAO;
-import com.psychology.product.test.entity.question.QuestionDAO;
-import com.psychology.product.test.entity.scale.ScaleDAO;
+import com.psychology.product.diagnostic.question.QuestionDAO;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,23 +21,17 @@ public class AnswerDAO {
     @Column(name = "answer_id", updatable = false, nullable = false)
     private UUID answerId;
 
-    @NotNull
     @Column(name = "answer_text")
     private String answerText;
 
-    @NotNull
     @ManyToOne
     @JoinColumn(name = "question_id")
     private QuestionDAO questionDAO;
 
-    @NotNull
-    @OneToOne
-    @JoinColumn(name = "scale_id")
-    private ScaleDAO scaleDAO;
+    @Column(name = "scale_points")
+    private short scalePoints;
 
-    @NotNull
-    @OneToOne
-    @JoinColumn(name = "interpretation_id")
-    private InterpretationDAO interpretationDAO;
+    @Column(name = "interpretation_points")
+    private short interpretationPoints;
 
 }

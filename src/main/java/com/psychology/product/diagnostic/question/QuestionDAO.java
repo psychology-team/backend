@@ -1,8 +1,8 @@
-package com.psychology.product.test.entity.question;
+package com.psychology.product.diagnostic.question;
 
-import com.psychology.product.test.entity.answer.AnswerDAO;
+import com.psychology.product.diagnostic.answer.AnswerDAO;
+import com.psychology.product.diagnostic.diagnostic.DiagnosticDAO;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,11 +23,15 @@ public class QuestionDAO {
     @Column(name = "question_id", updatable = false, nullable = false)
     private UUID questionId;
 
-    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "diagnostic_id")
+    private DiagnosticDAO diagnosticDAO;
+
     @Column(name = "question_text")
     private String questionText;
 
     @Transient
+    @OneToMany(mappedBy = "question_id", cascade = CascadeType.ALL)
     private List<AnswerDAO> answerDAOList;
 
 }
