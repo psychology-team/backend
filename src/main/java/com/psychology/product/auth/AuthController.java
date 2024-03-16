@@ -25,13 +25,13 @@ public class AuthController {
     private final ValidationHandler validationHandler;
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@Validated @RequestBody UserSignUp userSignUpRequest, BindingResult bindingResult) {
+    public ResponseEntity<?> signup(@Validated @RequestBody SignUpRequest signUpRequest, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return validationHandler.bindingResultHandler(bindingResult);
         }
 
-        userService.createNewUser(userSignUpRequest);
+        userService.createNewUser(signUpRequest);
         return ResponseEntity.ok().build();
 
     }

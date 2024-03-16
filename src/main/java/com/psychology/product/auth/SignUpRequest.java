@@ -5,7 +5,7 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
-public class UserSignUp {
+public class SignUpRequest {
 
     @NotNull
     @NotBlank

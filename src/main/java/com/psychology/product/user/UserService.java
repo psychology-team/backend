@@ -1,7 +1,7 @@
 package com.psychology.product.user;
 
-import com.psychology.product.auth.UserSignUp;
+import com.psychology.product.auth.SignUpRequest;
 
 public interface UserService {
-    void createNewUser(UserSignUp userSignUp);
+    void createNewUser(SignUpRequest signUpRequest);
 }
