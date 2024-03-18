@@ -53,6 +53,7 @@ dependencies {
 
     // Validation
     implementation("jakarta.validation", "jakarta.validation-api", "3.1.0-M1")
+    implementation("org.hibernate", "hibernate-validator", "8.0.1.Final")
 
     // Database
     implementation("org.postgresql", "postgresql", "42.7.1")
