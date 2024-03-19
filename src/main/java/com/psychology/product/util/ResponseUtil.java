@@ -32,7 +32,7 @@ public class ResponseUtil {
         return new ResponseEntity<>(map, status);
     }
 
-    public static ResponseEntity<?> generateError(String message, HttpStatus status, List<Map<String, String>> errors) {
+    public static ResponseEntity<?> generateError(String message, HttpStatus status, Map<String, ?> errors) {
         Map<String, Object> map = Map.of(
                 "message", message,
                 "status", status.value(),
