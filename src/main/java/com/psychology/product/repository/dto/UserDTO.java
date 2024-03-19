@@ -1,5 +1,6 @@
-package com.psychology.product.user;
+package com.psychology.product.repository.dto;
 
+import com.psychology.product.repository.model.UserAuthority;
 import lombok.Data;
 
 import java.time.Instant;

@@ -1,5 +1,6 @@
-package com.psychology.product.user;
+package com.psychology.product.service.impl;
 
+import com.psychology.product.repository.model.UserDAO;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,5 +1,7 @@
-package com.psychology.product.user;
+package com.psychology.product.service.impl;
 
+import com.psychology.product.repository.UserRepository;
+import com.psychology.product.repository.model.UserDAO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;

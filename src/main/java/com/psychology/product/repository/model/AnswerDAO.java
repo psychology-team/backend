@@ -1,6 +1,5 @@
-package com.psychology.product.diagnostic.answer;
+package com.psychology.product.repository.model;
 
-import com.psychology.product.diagnostic.question.QuestionDAO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,6 +1,6 @@
-package com.psychology.product.auth;
+package com.psychology.product.service.jwt;
 
-import com.psychology.product.user.UserDetailsImpl;
+import com.psychology.product.service.impl.UserDetailsImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;

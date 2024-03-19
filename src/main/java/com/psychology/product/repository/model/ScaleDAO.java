@@ -1,4 +1,4 @@
-package com.psychology.product.diagnostic.scale;
+package com.psychology.product.repository.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
