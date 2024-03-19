@@ -4,8 +4,10 @@ import com.psychology.product.service.impl.UserDetailsImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,7 +44,7 @@ public class JwtUtils {
 
         return Jwts.builder()
                 .claim("id", userPrincipal.getUser().getId())
-                .subject((userPrincipal.getUsername()))
+                .subject(userPrincipal.getUsername())
                 .issuedAt(new Date())
                 .expiration(expiration)
                 .signWith(jwtAccessSecret)
@@ -85,9 +87,15 @@ public class JwtUtils {
         try {
             Jwts.parser().verifyWith((SecretKey) secret).build().parse(token);
             return true;
-        } catch (Exception e) {
-            if (e instanceof ExpiredJwtException) return false;
-            log.error("Failed to validate JWT token", e);
+
+        } catch (ExpiredJwtException e) {
+            log.error("JWT token is expired");
+        } catch (UnsupportedJwtException e) {
+            log.error("JWT token is unsupported");
+        } catch (IllegalArgumentException e) {
+            log.error("JWT claims string is empty");
+        } catch (SignatureException e) {
+            log.error("JWT signature does not match locally computed signature");
         }
 
         return false;

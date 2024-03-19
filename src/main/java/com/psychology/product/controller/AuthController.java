@@ -52,7 +52,7 @@ public class AuthController {
         return ResponseUtil.generateResponse("Successfully Authenticated", HttpStatus.OK, loginResponse);
     }
 
-    @GetMapping("/login")
+    @GetMapping("/security-point")
     public void login() {
         System.out.println("Success");
     }
