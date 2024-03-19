@@ -3,41 +3,29 @@ package com.psychology.product.util;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 public class ResponseUtil {
-    public static ResponseEntity<Object> generateResponse(String message, HttpStatus status) {
-        Map<String, Object> map = Map.of(
-                "message", message,
-                "status", status.value()
-        );
-        return new ResponseEntity<>(map, status);
+    public static ResponseEntity<?> generateResponse(String message, HttpStatus status, Object... o) {
+        return getResponse(message, status, o);
     }
 
-    public static ResponseEntity<Object> generateError(String message, HttpStatus status) {
-        Map<String, Object> map = Map.of(
-                "message", message,
-                "status", status.value()
-        );
-        return new ResponseEntity<>(map, status);
-    }
-
-    public static ResponseEntity<Object> generateResponse(String message, HttpStatus status, Object responseObject) {
-        Map<String, Object> map = Map.of(
-                "message", message,
-                "status", status.value(),
-                "data", responseObject
-        );
-        return new ResponseEntity<>(map, status);
+    public static ResponseEntity<?> generateError(String message, HttpStatus status) {
+        return getResponse(message, status);
     }
 
     public static ResponseEntity<?> generateError(String message, HttpStatus status, Map<String, ?> errors) {
-        Map<String, Object> map = Map.of(
-                "message", message,
-                "status", status.value(),
-                "data", errors
-        );
+        return getResponse(message, status, errors);
+    }
+
+    private static ResponseEntity<?> getResponse(String message, HttpStatus status, Object... o) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("message", message);
+        map.put("status", status.value());
+        if (o.length > 0 && o[0] != null) {
+            map.put("data", o[0]);
+        }
         return new ResponseEntity<>(map, status);
     }
 }
