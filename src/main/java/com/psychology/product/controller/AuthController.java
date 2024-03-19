@@ -1,6 +1,9 @@
 package com.psychology.product.controller;
 
+import com.psychology.product.controller.request.LoginRequest;
 import com.psychology.product.controller.request.SignUpRequest;
+import com.psychology.product.controller.response.LoginResponse;
+import com.psychology.product.service.AuthService;
 import com.psychology.product.service.UserService;
 import com.psychology.product.util.ResponseHandler;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final UserService userService;
+    private final AuthService authService;
 
     @PostMapping("/signup")
     @Operation(summary = "Register new user")
@@ -37,6 +41,18 @@ public class AuthController {
     public ResponseEntity<?> signup(@Validated @RequestBody SignUpRequest signUpRequest) {
         userService.createNewUser(signUpRequest);
         return ResponseHandler.generateResponse("Created", HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    @Operation(summary = "User authentication and token issuance")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully Authenticated"),
+            @ApiResponse(responseCode = "400", description = "Invalid request format or data"),
+            @ApiResponse(responseCode = "404", description = "User Not Found")
+    })
+    public ResponseEntity<?> login(@Validated @RequestBody LoginRequest loginRequest) {
+       LoginResponse loginResponse =  authService.login(loginRequest);
+        return ResponseEntity.ok(loginResponse);
     }
 
 }

@@ -6,9 +6,9 @@ import org.springframework.http.ResponseEntity;
 import java.util.Map;
 
 public class ResponseHandler {
-    public static ResponseEntity<Object> generateResponse(String messege, HttpStatus status) {
+    public static ResponseEntity<Object> generateResponse(String message, HttpStatus status) {
         Map<String, Object> map = Map.of(
-                "message", messege,
+                "message", message,
                 "status", status.value()
         );
         return new ResponseEntity<>(map, status);
@@ -21,5 +21,4 @@ public class ResponseHandler {
         );
         return new ResponseEntity<>(map, status);
     }
-
 }
