@@ -1,8 +1,8 @@
 package com.psychology.product.config;
 
-import com.psychology.product.auth.AuthEntryPointJwt;
-import com.psychology.product.auth.AuthTokenFilter;
-import com.psychology.product.user.UserDetailsServiceImpl;
+import com.psychology.product.service.jwt.AuthEntryPointJwt;
+import com.psychology.product.service.jwt.AuthTokenFilter;
+import com.psychology.product.service.impl.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

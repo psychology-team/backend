@@ -1,4 +1,4 @@
-package com.psychology.product.user;
+package com.psychology.product.repository.model;
 
 import org.springframework.security.core.GrantedAuthority;
 

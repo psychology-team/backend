@@ -1,4 +1,4 @@
-package com.psychology.product.auth;
+package com.psychology.product.service.jwt;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

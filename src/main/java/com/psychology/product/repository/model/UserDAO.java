@@ -1,8 +1,9 @@
-package com.psychology.product.user;
+package com.psychology.product.repository.model;
 
-import com.psychology.product.diagnostic.userdiagnosticresult.UserDiagnosticResultDAO;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
 
 import java.io.Serializable;
@@ -15,11 +16,8 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "users")
-
 public class UserDAO implements Serializable {
 
     @Id

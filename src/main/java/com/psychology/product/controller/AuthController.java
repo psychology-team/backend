@@ -1,10 +1,13 @@
-package com.psychology.product.auth;
+package com.psychology.product.controller;
 
-import com.psychology.product.user.UserService;
+import com.psychology.product.controller.request.SignUpRequest;
+import com.psychology.product.service.UserService;
+import com.psychology.product.util.ResponseHandler;
 import com.psychology.product.util.ValidationHandler;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -32,7 +35,7 @@ public class AuthController {
         }
 
         userService.createNewUser(signUpRequest);
-        return ResponseEntity.ok().build();
+        return ResponseHandler.generateResponse("Created", HttpStatus.CREATED);
 
     }
 
