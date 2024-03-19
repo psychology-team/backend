@@ -3,7 +3,6 @@ package com.psychology.product.controller;
 import com.psychology.product.controller.request.SignUpRequest;
 import com.psychology.product.service.UserService;
 import com.psychology.product.util.ResponseHandler;
-import com.psychology.product.util.ValidationHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
