@@ -5,10 +5,10 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.Map;
 
-public class ResponseHandler {
-    public static ResponseEntity<Object> generateResponse(String messege, HttpStatus status) {
+public class ResponseUtil {
+    public static ResponseEntity<Object> generateResponse(String message, HttpStatus status) {
         Map<String, Object> map = Map.of(
-                "message", messege,
+                "message", message,
                 "status", status.value()
         );
         return new ResponseEntity<>(map, status);
@@ -18,6 +18,15 @@ public class ResponseHandler {
         Map<String, Object> map = Map.of(
                 "message", message,
                 "status", status.value()
+        );
+        return new ResponseEntity<>(map, status);
+    }
+
+    public static ResponseEntity<Object> generateResponse(String message, HttpStatus status, Object responseObject) {
+        Map<String, Object> map = Map.of(
+                "message", message,
+                "status", status.value(),
+                "data", responseObject
         );
         return new ResponseEntity<>(map, status);
     }

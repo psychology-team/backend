@@ -13,6 +13,7 @@ public class UserDetailsImpl implements UserDetails {
     private UserDAO user;
 
     public UserDetailsImpl(UserDAO user) {
+        this.user = user;
     }
 
     @Override
