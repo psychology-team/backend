@@ -5,7 +5,9 @@ import com.psychology.product.repository.UserRepository;
 import com.psychology.product.repository.model.UserAuthority;
 import com.psychology.product.repository.model.UserDAO;
 import com.psychology.product.service.UserService;
-import com.psychology.product.util.exception.RequestExceptionHandler;
+import com.psychology.product.util.exception.BadRequestException;
+import com.psychology.product.util.exception.ConflictException;
+import com.psychology.product.util.exception.GlobalExceptionHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,7 +28,8 @@ public class UserServiceImpl implements UserService {
     public void createNewUser(SignUpRequest signUpRequest) {
 
         boolean userExist = userRepository.findByEmail(signUpRequest.email()).isPresent();
-        if (userExist) throw RequestExceptionHandler.badRequestException("User already exist");
+        if (userExist) throw new ConflictException("User already exist");
+
 
         UserDAO user = new UserDAO();
         user.setFirstName(signUpRequest.firstName());

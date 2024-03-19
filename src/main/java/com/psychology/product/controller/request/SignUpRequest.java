@@ -14,7 +14,7 @@ public record SignUpRequest(@NotNull
                             @NotNull
                             @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$")
                             String password,
-                            @Pattern(regexp = "^\\+38\\d{1,10}$")
+                            @Pattern(regexp = "^\\+38\\d{10,13}$")
                             String phone) {
 
 }
