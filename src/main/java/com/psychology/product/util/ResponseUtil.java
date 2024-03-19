@@ -3,6 +3,7 @@ package com.psychology.product.util;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
 import java.util.Map;
 
 public class ResponseUtil {
@@ -31,4 +32,12 @@ public class ResponseUtil {
         return new ResponseEntity<>(map, status);
     }
 
+    public static ResponseEntity<?> generateError(String message, HttpStatus status, Map<String, ?> errors) {
+        Map<String, Object> map = Map.of(
+                "message", message,
+                "status", status.value(),
+                "data", errors
+        );
+        return new ResponseEntity<>(map, status);
+    }
 }

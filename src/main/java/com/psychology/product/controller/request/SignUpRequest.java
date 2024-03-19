@@ -8,6 +8,8 @@ import jakarta.validation.constraints.Pattern;
 public record SignUpRequest(@NotNull
                             @NotBlank
                             String firstName,
+                            @NotNull
+                            @NotBlank
                             String lastName,
                             @NotNull
                             @Email String email,

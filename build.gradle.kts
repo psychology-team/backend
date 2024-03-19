@@ -48,7 +48,6 @@ dependencies {
     implementation("org.springframework", "spring-context-support")
     implementation("org.springdoc", "springdoc-openapi-starter-webmvc-ui", "2.2.0")
     developmentOnly("org.springframework.boot", "spring-boot-devtools")
-    testImplementation("org.springframework.boot", "spring-boot-starter-test")
     testImplementation("org.springframework.security", "spring-security-test")
 
     // Validation
@@ -58,6 +57,8 @@ dependencies {
     // Database
     implementation("org.postgresql", "postgresql", "42.7.1")
     runtimeOnly("org.postgresql", "postgresql")
+    testImplementation("com.h2database:h2:2.2.224")
+
 
     // Authentication
     val jjwt = "0.12.5"
