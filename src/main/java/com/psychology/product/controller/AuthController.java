@@ -7,9 +7,12 @@ import com.psychology.product.service.AuthService;
 import com.psychology.product.service.UserService;
 import com.psychology.product.util.ResponseUtil;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.security.auth.message.AuthException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -48,13 +51,26 @@ public class AuthController {
             @ApiResponse(responseCode = "404", description = "User Not Found")
     })
     public ResponseEntity<?> login(@Validated @RequestBody LoginRequest loginRequest) {
-        LoginResponse loginResponse = authService.login(loginRequest);
+        LoginResponse loginResponse = authService.loginUser(loginRequest);
         return ResponseUtil.generateResponse("Successfully Authenticated", HttpStatus.OK, loginResponse);
     }
 
     @GetMapping("/security-point")
     public void login() {
         System.out.println("Success");
+    }
+
+    @PostMapping("/refresh/access-token")
+    @Operation(summary = "Refresh jwt access token")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(schema = @Schema(implementation = LoginResponse.class), mediaType = "application/json")
+            }),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
+    public ResponseEntity<?> getNewAccessToken(@RequestBody LoginResponse loginResponse) throws AuthException {
+        LoginResponse token = authService.getJwtAccessToken(loginResponse.jwtRefreshToken());
+        return ResponseUtil.generateResponse("Access token", HttpStatus.OK, token);
     }
 
 }

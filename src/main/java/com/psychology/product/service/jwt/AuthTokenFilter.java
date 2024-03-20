@@ -1,5 +1,6 @@
 package com.psychology.product.service.jwt;
 
+import com.psychology.product.service.JwtUtils;
 import com.psychology.product.service.impl.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -21,7 +22,7 @@ import java.io.IOException;
 public class AuthTokenFilter extends OncePerRequestFilter {
 
     @Autowired
-    private JwtUtils jwtUtils;
+    private JwtUtilsImpl jwtUtilsImpl;
     @Autowired
     private UserDetailsServiceImpl userDetailsServiceImpl;
 
@@ -33,8 +34,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             @NotNull FilterChain filterChain
     ) throws ServletException, IOException {
         String jwt = parseJwt(request);
-        if (jwt != null && jwtUtils.validateJwtAccessToken(jwt)) {
-            String emailOfUser = jwtUtils.getEmailFromJwtToken(jwt);
+        if (jwt != null && jwtUtilsImpl.validateJwtAccessToken(jwt)) {
+            String emailOfUser = jwtUtilsImpl.getEmailFromJwtToken(jwt);
 
             UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(emailOfUser);
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
