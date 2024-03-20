@@ -6,7 +6,6 @@ import com.psychology.product.controller.response.JwtResponse;
 import com.psychology.product.service.AuthService;
 import com.psychology.product.service.JwtUtils;
 import com.psychology.product.service.UserService;
-import com.psychology.product.service.jwt.JwtUtilsImpl;
 import com.psychology.product.util.ResponseUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
