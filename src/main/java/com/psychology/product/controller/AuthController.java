@@ -2,7 +2,7 @@ package com.psychology.product.controller;
 
 import com.psychology.product.controller.request.LoginRequest;
 import com.psychology.product.controller.request.SignUpRequest;
-import com.psychology.product.controller.response.LoginResponse;
+import com.psychology.product.controller.response.JwtResponse;
 import com.psychology.product.service.AuthService;
 import com.psychology.product.service.UserService;
 import com.psychology.product.util.ResponseUtil;
@@ -51,8 +51,8 @@ public class AuthController {
             @ApiResponse(responseCode = "404", description = "User Not Found")
     })
     public ResponseEntity<?> login(@Validated @RequestBody LoginRequest loginRequest) {
-        LoginResponse loginResponse = authService.loginUser(loginRequest);
-        return ResponseUtil.generateResponse("Successfully Authenticated", HttpStatus.OK, loginResponse);
+        JwtResponse jwtResponse = authService.loginUser(loginRequest);
+        return ResponseUtil.generateResponse("Successfully Authenticated", HttpStatus.OK, jwtResponse);
     }
 
     @GetMapping("/security-point")
@@ -64,13 +64,26 @@ public class AuthController {
     @Operation(summary = "Refresh jwt access token")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
-                    @Content(schema = @Schema(implementation = LoginResponse.class), mediaType = "application/json")
+                    @Content(schema = @Schema(implementation = JwtResponse.class), mediaType = "application/json")
             }),
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
-    public ResponseEntity<?> getNewAccessToken(@RequestBody LoginResponse loginResponse) throws AuthException {
-        LoginResponse token = authService.getJwtAccessToken(loginResponse.jwtRefreshToken());
+    public ResponseEntity<?> getNewAccessToken(@RequestBody JwtResponse jwtResponse) throws AuthException {
+        JwtResponse token = authService.getJwtAccessToken(jwtResponse.jwtRefreshToken());
         return ResponseUtil.generateResponse("Access token", HttpStatus.OK, token);
+    }
+
+    @PostMapping("/refresh/refresh-token")
+    @Operation(summary = "Refresh jwt refresh token")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(schema = @Schema(implementation = JwtResponse.class), mediaType = "application/json")
+            }),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
+    public ResponseEntity<?> getNewRefreshToken(@RequestBody JwtResponse jwtResponse) throws AuthException {
+        JwtResponse tokens = authService.getJwtRefreshToken(jwtResponse.jwtRefreshToken());
+        return ResponseUtil.generateResponse("Tokens", HttpStatus.OK, tokens);
     }
 
 }
