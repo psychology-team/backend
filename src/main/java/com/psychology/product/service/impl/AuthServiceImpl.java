@@ -82,9 +82,4 @@ public class AuthServiceImpl implements AuthService {
         return authentication;
     }
 
-    private boolean checkExistUser(String email) {
-        return userService.findUserByEmail(email);
-    }
-
-
 }

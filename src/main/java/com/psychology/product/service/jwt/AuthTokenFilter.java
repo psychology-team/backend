@@ -1,6 +1,5 @@
 package com.psychology.product.service.jwt;
 
-import com.psychology.product.service.JwtUtils;
 import com.psychology.product.service.impl.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
