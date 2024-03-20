@@ -1,7 +1,7 @@
 package com.psychology.product.service.impl;
 
 import com.psychology.product.controller.request.LoginRequest;
-import com.psychology.product.controller.response.LoginResponse;
+import com.psychology.product.controller.response.JwtResponse;
 import com.psychology.product.repository.model.UserDAO;
 import com.psychology.product.service.AuthService;
 import com.psychology.product.service.JwtUtils;
@@ -35,8 +35,9 @@ public class AuthServiceImpl implements AuthService {
         refreshStorage.put(email, jwtRefreshToken);
     }
 
+
     @Override
-    public LoginResponse loginUser(LoginRequest loginRequest) {
+    public JwtResponse loginUser(LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password())
         );
@@ -49,15 +50,26 @@ public class AuthServiceImpl implements AuthService {
         jwtRefreshToken = jwtUtils.generateRefreshToken(authentication);
         saveJwtRefreshToken(userDetails.getUsername(), jwtRefreshToken);
 
-        return new LoginResponse(jwtAccessToken, jwtRefreshToken);
+        return new JwtResponse(jwtAccessToken, jwtRefreshToken);
     }
 
     @Override
-    public LoginResponse getJwtAccessToken(String refreshToken) throws AuthException {
+    public JwtResponse getJwtAccessToken(String refreshToken) throws AuthException {
         if (jwtUtils.validateJwtRefreshToken(refreshToken)) {
             Authentication authentication = authenticateWithRefreshToken(refreshToken);
             String accessToken = jwtUtils.generateJwtToken(authentication);
-            return new LoginResponse(accessToken, null);
+            return new JwtResponse(accessToken, null);
+        }
+        throw new AuthException("Invalid token");
+    }
+
+    @Override
+    public JwtResponse getJwtRefreshToken(String refreshToken) throws AuthException {
+        if (jwtUtils.validateJwtRefreshToken(refreshToken)) {
+            Authentication authentication = authenticateWithRefreshToken(refreshToken);
+            String access = jwtUtils.generateJwtToken(authentication);
+            String refresh = jwtUtils.generateRefreshToken(authentication);
+            return new JwtResponse(access, refresh);
         }
         throw new AuthException("Invalid token");
     }
@@ -81,10 +93,5 @@ public class AuthServiceImpl implements AuthService {
         }
         return authentication;
     }
-
-    private boolean checkExistUser(String email) {
-        return userService.findUserByEmail(email);
-    }
-
 
 }
