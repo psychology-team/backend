@@ -2,14 +2,18 @@ package com.psychology.product.controller;
 
 import com.psychology.product.controller.request.LoginRequest;
 import com.psychology.product.controller.request.SignUpRequest;
+import com.psychology.product.controller.response.JwtResponse;
 import com.psychology.product.controller.response.LoginResponse;
 import com.psychology.product.service.AuthService;
 import com.psychology.product.service.UserService;
 import com.psychology.product.util.ResponseUtil;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.security.auth.message.AuthException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -55,6 +59,19 @@ public class AuthController {
     @GetMapping("/security-point")
     public void login() {
         System.out.println("Success");
+    }
+
+    @PostMapping("/refresh/access-token")
+    @Operation(summary = "Refresh jwt access token")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(schema = @Schema(implementation = JwtResponse.class), mediaType = "application/json")
+            }),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
+    public ResponseEntity<?> getNewAccessToken(@RequestBody JwtResponse jwtResponse) throws AuthException {
+        final JwtResponse token = authService.getJwtAccessToken(jwtResponse.getJwtRefreshToken());
+        return ResponseUtil.generateResponse("Access token", HttpStatus.OK, token);
     }
 
 }

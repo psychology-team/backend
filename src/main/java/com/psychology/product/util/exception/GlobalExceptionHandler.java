@@ -36,5 +36,10 @@ public class GlobalExceptionHandler {
                         Collectors.mapping(FieldError::getDefaultMessage, Collectors.toList())));
         return ResponseUtil.generateError("Validation failed", HttpStatus.BAD_REQUEST, errors);
     }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<?> forbidden(ForbiddenException e) {
+        return ResponseUtil.generateError(e.getMessage(), HttpStatus.FORBIDDEN);
+    }
 }
 
