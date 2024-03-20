@@ -11,12 +11,8 @@ public class ResponseUtil {
         return getResponse(message, status, o);
     }
 
-    public static ResponseEntity<?> generateError(String message, HttpStatus status) {
-        return getResponse(message, status);
-    }
-
-    public static ResponseEntity<?> generateError(String message, HttpStatus status, Map<String, ?> errors) {
-        return getResponse(message, status, errors);
+    public static ResponseEntity<?> generateError(String message, HttpStatus status, Object... o) {
+        return getResponse(message, status, o);
     }
 
     private static ResponseEntity<?> getResponse(String message, HttpStatus status, Object... o) {
