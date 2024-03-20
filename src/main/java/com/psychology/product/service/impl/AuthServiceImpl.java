@@ -26,7 +26,7 @@ public class AuthServiceImpl implements AuthService {
     public LoginResponse login(LoginRequest loginRequest) {
 
         if (!checkExistUser(loginRequest.email()))
-            throw new NotFoundException(String.format("Not found user with email: %s", loginRequest.email()));
+            throw new NotFoundException("User not found");
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password()));
 

@@ -12,9 +12,10 @@ public record SignUpRequest(@NotNull
                             @NotBlank
                             String lastName,
                             @NotNull
-                            @Email String email,
+                            @Email(message = "Please provide a valid email address.") String email,
                             @NotNull
-                            @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$")
+                            @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
+                                    message = "Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, one digit, and one special character.")
                             String password,
                             @Pattern(regexp = "^\\+38\\d{10,13}$")
                             String phone) {
