@@ -1,6 +1,5 @@
 package com.psychology.product.util;
 
-import com.psychology.product.controller.response.JwtResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 

@@ -2,9 +2,8 @@ package com.psychology.product.controller;
 
 import com.psychology.product.controller.request.LoginRequest;
 import com.psychology.product.controller.request.SignUpRequest;
-import com.psychology.product.controller.response.JwtResponse;
+import com.psychology.product.controller.response.LoginResponse;
 import com.psychology.product.service.AuthService;
-import com.psychology.product.service.JwtUtils;
 import com.psychology.product.service.UserService;
 import com.psychology.product.util.ResponseUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,11 +17,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,8 +30,6 @@ public class AuthController {
 
     private final UserService userService;
     private final AuthService authService;
-    private final AuthenticationManager authenticationManager;
-    private final JwtUtils jwtUtils;
 
     @PostMapping("/signup")
     @Operation(summary = "Register new user")
@@ -59,19 +51,8 @@ public class AuthController {
             @ApiResponse(responseCode = "404", description = "User Not Found")
     })
     public ResponseEntity<?> login(@Validated @RequestBody LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password())
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        String jwtAccessToken = jwtUtils.generateJwtToken(authentication);
-        String jwtRefreshToken;
-
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        jwtRefreshToken = jwtUtils.generateRefreshToken(authentication);
-        authService.saveJwtRefreshToken(userDetails.getUsername(), jwtRefreshToken);
-
-        return ResponseUtil.generateResponse("Successfully Authenticated", HttpStatus.OK, new LoginRequest(jwtAccessToken, jwtRefreshToken));
+        LoginResponse loginResponse = authService.loginUser(loginRequest);
+        return ResponseUtil.generateResponse("Successfully Authenticated", HttpStatus.OK, loginResponse);
     }
 
     @GetMapping("/security-point")
@@ -83,12 +64,12 @@ public class AuthController {
     @Operation(summary = "Refresh jwt access token")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
-                    @Content(schema = @Schema(implementation = JwtResponse.class), mediaType = "application/json")
+                    @Content(schema = @Schema(implementation = LoginResponse.class), mediaType = "application/json")
             }),
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
-    public ResponseEntity<?> getNewAccessToken(@RequestBody JwtResponse jwtResponse) throws AuthException {
-        final JwtResponse token = authService.getJwtAccessToken(jwtResponse.getJwtRefreshToken());
+    public ResponseEntity<?> getNewAccessToken(@RequestBody LoginResponse loginResponse) throws AuthException {
+        LoginResponse token = authService.getJwtAccessToken(loginResponse.jwtRefreshToken());
         return ResponseUtil.generateResponse("Access token", HttpStatus.OK, token);
     }
 
