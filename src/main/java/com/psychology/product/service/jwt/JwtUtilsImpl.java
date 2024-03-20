@@ -1,5 +1,6 @@
 package com.psychology.product.service.jwt;
 
+import com.psychology.product.service.JwtUtils;
 import com.psychology.product.service.impl.UserDetailsImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -20,7 +21,7 @@ import java.util.Date;
 
 @Component
 @Slf4j
-public class JwtUtils {
+public class JwtUtilsImpl implements JwtUtils {
 
     @Value("${jwt.secret.access.expirationMs}")
     private long jwtAccessExpirationMs;
@@ -30,7 +31,7 @@ public class JwtUtils {
     private final Key jwtAccessSecret;
     private final SecretKey jwtRefreshSecret;
 
-    public JwtUtils(
+    public JwtUtilsImpl(
             @Value(("${jwt.secret.access}")) String jwtAccessSecret,
             @Value(("${jwt.secret.refresh}")) String jwtRefreshSecret
     ) {
