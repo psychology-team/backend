@@ -65,6 +65,7 @@ public class SecurityConfiguration {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .authorizeHttpRequests((authz) -> authz
                         .requestMatchers(HttpMethod.GET, "/auth/security-point").authenticated()
+                        .requestMatchers( "/user/**").authenticated()
                         .anyRequest().permitAll()
                 )
                 .httpBasic(withDefaults());
