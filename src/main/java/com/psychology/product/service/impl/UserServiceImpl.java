@@ -7,7 +7,6 @@ import com.psychology.product.repository.model.UserDAO;
 import com.psychology.product.service.UserService;
 import com.psychology.product.util.ResponseUtil;
 import com.psychology.product.util.exception.ConflictException;
-import com.psychology.product.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,8 +20,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +35,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void createNewUser(SignUpRequest signUpRequest) {
 
-        if (findUserByEmail(signUpRequest.email())) throw new ConflictException("User already exist");
+        if (findUserByEmail(signUpRequest.email()).isPresent()) throw new ConflictException("User already exist");
 
         UserDAO user = new UserDAO();
         user.setFirstName(signUpRequest.firstName());
@@ -53,13 +52,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<?> deleteUser(String userId) {
+    public ResponseEntity<?> deleteUser() {
         try {
-            UUID userUuid = UUID.fromString(userId);
-            UserDAO userDAO = findUserById(userUuid);
-
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Optional<UserDAO> optionalUserDAO = findUserByEmail(authentication.getName());
+            UserDAO userDAO = null;
 
+            if (optionalUserDAO.isPresent()) {
+                if (!optionalUserDAO.get().getRevoked())
+                    return ResponseUtil.generateError("Error: Unauthorized", HttpStatus.UNAUTHORIZED);
+                userDAO = optionalUserDAO.get();
+            }
+
+            assert userDAO != null;
             if (authentication.getAuthorities().contains(UserAuthority.ADMIN) ||
                     userDAO.getEmail().equals(authentication.getName())) {
                 userDAO.setRevoked(true);
@@ -76,18 +81,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean findUserByEmail(String email) {
-        return userRepository.findByEmail(email).isPresent();
+    public Optional<UserDAO> findUserByEmail(String email) {
+        if (userRepository.findByEmail(email).isPresent()) {
+            return userRepository.findByEmail(email);
+        } else return Optional.empty();
     }
 
     public Authentication userAuthentication(UserDAO user) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
-
-    @Override
-    public UserDAO findUserById(UUID userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
-    }
-
 }
