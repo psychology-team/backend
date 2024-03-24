@@ -25,8 +25,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.time.Instant;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -69,16 +69,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean deleteUser() throws AuthException {
+    public UserDTO updateUser(UserDTO updated) {
+        String tokenFromRequest = getTokenFromRequest();
+        String emailFromRequest = jwtUtils.getEmailFromJwtToken(tokenFromRequest);
+        UserDAO current = findUserByEmail(emailFromRequest);
+        Optional.ofNullable(updated.firstName()).ifPresent(current::setFirstName);
+        Optional.ofNullable(updated.lastName()).ifPresent(current::setLastName);
+        Optional.ofNullable(updated.phone()).ifPresent(current::setPhone);
+
+        userRepository.save(current);
+
+        return userMapper.toDTO(current);
+    }
+
+    @Override
+    public void disableUser() throws AuthException {
         String tokenFromRequest = getTokenFromRequest();
         String emailFromRequest = jwtUtils.getEmailFromJwtToken(tokenFromRequest);
         UserDAO user = findUserByEmail(emailFromRequest);
         if (user.getRevoked()) throw new AuthException("Unauthorized");
         boolean doesExistUser = userRepository.existsById(user.getId());
-        if (!doesExistUser) return false;
+        if (!doesExistUser) return;
         user.setRevoked(true);
         userRepository.save(user);
-        return true;
     }
 
 
@@ -94,8 +107,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private String getTokenFromRequest() {
-        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder
-                .currentRequestAttributes())).getRequest();
+        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
         String authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             return authorizationHeader.substring(7);

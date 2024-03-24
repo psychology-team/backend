@@ -33,8 +33,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
         }
 )
 @SecurityScheme(
-        name = "bearerAuth",
-        description = "JWT auth description",
+        name = "Bearer Authentication",
         scheme = "bearer",
         type = SecuritySchemeType.HTTP,
         bearerFormat = "JWT",
