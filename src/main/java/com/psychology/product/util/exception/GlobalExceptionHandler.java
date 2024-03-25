@@ -1,8 +1,11 @@
 package com.psychology.product.util.exception;
 
 import com.psychology.product.util.ResponseUtil;
+import jakarta.security.auth.message.AuthException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -40,6 +43,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ForbiddenException.class)
     public ResponseEntity<?> forbidden(ForbiddenException e) {
         return ResponseUtil.generateError(e.getMessage(), HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(AuthException.class)
+    public ResponseEntity<?> unauthorized(AuthException e) {
+        return ResponseUtil.generateError(e.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 }
 

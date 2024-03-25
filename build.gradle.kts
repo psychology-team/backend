@@ -59,6 +59,10 @@ dependencies {
     runtimeOnly("org.postgresql", "postgresql")
     testImplementation("com.h2database:h2:2.2.224")
 
+    // Mappings
+    val mapstruct = "1.5.0.Final"
+    implementation("org.mapstruct", "mapstruct", mapstruct)
+    annotationProcessor("org.mapstruct", "mapstruct-processor", mapstruct)
 
     // Authentication
     val jjwt = "0.12.5"
@@ -68,7 +72,7 @@ dependencies {
 
     // Utilities
     implementation("org.jetbrains", "annotations", "24.1.0")
-    implementation("org.springdoc",  "springdoc-openapi-starter-webmvc-ui",  "2.3.0")
+    implementation("org.springdoc", "springdoc-openapi-starter-webmvc-ui", "2.3.0")
 
     // Testing
     testImplementation("org.springframework.boot", "spring-boot-starter-test")

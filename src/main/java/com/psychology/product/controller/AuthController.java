@@ -48,7 +48,8 @@ public class AuthController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully Authenticated"),
             @ApiResponse(responseCode = "400", description = "Invalid request format or data"),
-            @ApiResponse(responseCode = "404", description = "User Not Found")
+            @ApiResponse(responseCode = "404", description = "User Not Found"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
     public ResponseEntity<?> login(@Validated @RequestBody LoginRequest loginRequest) {
         JwtResponse jwtResponse = authService.loginUser(loginRequest);
