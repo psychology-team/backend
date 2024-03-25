@@ -10,7 +10,6 @@ import com.psychology.product.service.UserMapper;
 import com.psychology.product.service.UserService;
 import com.psychology.product.util.exception.ConflictException;
 import com.psychology.product.util.exception.NotFoundException;
-import jakarta.security.auth.message.AuthException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -83,13 +82,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void disableUser() throws AuthException {
+    public void disableUser() {
         String tokenFromRequest = getTokenFromRequest();
         String emailFromRequest = jwtUtils.getEmailFromJwtToken(tokenFromRequest);
         UserDAO user = findUserByEmail(emailFromRequest);
-        if (user.getRevoked()) throw new AuthException("Unauthorized");
-        boolean doesExistUser = userRepository.existsById(user.getId());
-        if (!doesExistUser) return;
+        if (user.getRevoked()) return;
         user.setRevoked(true);
         userRepository.save(user);
     }

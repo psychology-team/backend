@@ -1,5 +1,6 @@
 package com.psychology.product.controller;
 
+import com.psychology.product.aspect.ExcludeAspect;
 import com.psychology.product.controller.request.LoginRequest;
 import com.psychology.product.controller.request.SignUpRequest;
 import com.psychology.product.controller.response.JwtResponse;
@@ -32,6 +33,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
+    @ExcludeAspect
     @Operation(summary = "Register new user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Created"),
@@ -44,6 +46,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
+    @ExcludeAspect
     @Operation(summary = "User authentication and token issuance")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully Authenticated"),

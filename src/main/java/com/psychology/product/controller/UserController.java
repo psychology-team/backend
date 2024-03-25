@@ -24,7 +24,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/me")
+    @GetMapping("/")
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Get current user", tags = {"User Library"})
     @ApiResponses(value = {
@@ -37,7 +37,7 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @PutMapping("/me")
+    @PutMapping("/")
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Update current user")
     @ApiResponses(value = {
@@ -51,7 +51,7 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @DeleteMapping("/me")
+    @DeleteMapping("/")
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Disable user")
     @ApiResponses(value = {
