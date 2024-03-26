@@ -21,6 +21,8 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
+      - name: Set executable permission f or gradlew
+        run: chmod +x gradlew
       - name: Test with Gradle
         uses: gradle/gradle-build-action@v2.11.1
         with:
