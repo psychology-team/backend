@@ -88,6 +88,7 @@ public class UserServiceImpl implements UserService {
         UserDAO user = findUserByEmail(emailFromRequest);
         if (user.getRevoked()) return;
         user.setRevoked(true);
+        user.setRevokedTimestamp(Instant.now());
         userRepository.save(user);
     }
 
