@@ -20,13 +20,14 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @AllArgsConstructor
 @Tag(name = "User Controller", description = "Endpoints for working with user")
+@CrossOrigin(origins = "*")
 public class UserController {
 
     private final UserService userService;
 
     @GetMapping("/")
     @SecurityRequirement(name = "Bearer Authentication")
-    @Operation(summary = "Get current user", tags = {"User Library"})
+    @Operation(summary = "Get current user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User retrieved successfully"),
             @ApiResponse(responseCode = "404", description = "User not found"),
@@ -55,7 +56,7 @@ public class UserController {
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Disable user")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully Deleted"),
+            @ApiResponse(responseCode = "200", description = "Successfully Disabled"),
             @ApiResponse(responseCode = "403", description = "Haven't permission to disable user"),
             @ApiResponse(responseCode = "404", description = "User not found")
     })
