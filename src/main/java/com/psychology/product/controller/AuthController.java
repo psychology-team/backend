@@ -25,8 +25,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 @Slf4j
 @AllArgsConstructor
-
 @Tag(name = "Authentication Controller", description = "Endpoints for authentication business logic")
+@CrossOrigin(origins = "*")
 public class AuthController {
 
     private final UserService userService;
