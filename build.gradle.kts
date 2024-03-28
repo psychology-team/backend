@@ -48,19 +48,31 @@ dependencies {
     implementation("org.springframework", "spring-context-support")
     implementation("org.springdoc", "springdoc-openapi-starter-webmvc-ui", "2.2.0")
     developmentOnly("org.springframework.boot", "spring-boot-devtools")
-    developmentOnly("org.springframework.boot", "spring-boot-docker-compose")
-    testImplementation("org.springframework.boot", "spring-boot-starter-test")
     testImplementation("org.springframework.security", "spring-security-test")
 
     // Validation
     implementation("jakarta.validation", "jakarta.validation-api", "3.1.0-M1")
+    implementation("org.hibernate", "hibernate-validator", "8.0.1.Final")
 
     // Database
     implementation("org.postgresql", "postgresql", "42.7.1")
     runtimeOnly("org.postgresql", "postgresql")
+    testImplementation("com.h2database:h2:2.2.224")
+
+    // Mappings
+    val mapstruct = "1.5.0.Final"
+    implementation("org.mapstruct", "mapstruct", mapstruct)
+    annotationProcessor("org.mapstruct", "mapstruct-processor", mapstruct)
+
+    // Authentication
+    val jjwt = "0.12.5"
+    implementation("io.jsonwebtoken", "jjwt-api", jjwt)
+    implementation("io.jsonwebtoken", "jjwt-impl", jjwt)
+    implementation("io.jsonwebtoken", "jjwt-jackson", jjwt)
 
     // Utilities
     implementation("org.jetbrains", "annotations", "24.1.0")
+    implementation("org.springdoc", "springdoc-openapi-starter-webmvc-ui", "2.3.0")
 
     // Testing
     testImplementation("org.springframework.boot", "spring-boot-starter-test")
