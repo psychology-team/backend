@@ -14,7 +14,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
                 contact = @Contact(
                         name = "${developer.contact.names}",
                         email = "${developer.contact.email}",
-                        url = "https://psychologyplatform.tech/"
+                        url = "${application.server.host}:${application.server.port}"
                 ),
                 description = "OpenApi documentation for Spring Security",
                 title = "OpenApi specification - ${application.name}",
@@ -23,7 +23,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
         servers = {
                 @Server(
                         description = "${application.name}",
-                        url = "${application.server.host}:${application.server.port}"
+                        url = "https://psychologyplatform.tech"
                 ),
         },
         security = {
