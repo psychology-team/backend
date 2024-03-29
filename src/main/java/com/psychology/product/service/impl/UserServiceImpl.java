@@ -19,10 +19,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -82,12 +84,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<UserDTO> findAllUsers() {
+        List<UserDAO> users = userRepository.findAll();
+        return users.stream()
+                .map(userMapper::toDTO)
+                .toList();
+    }
+
+    @Override
     public void disableUser() {
         String tokenFromRequest = getTokenFromRequest();
         String emailFromRequest = jwtUtils.getEmailFromJwtToken(tokenFromRequest);
         UserDAO user = findUserByEmail(emailFromRequest);
         if (user.getRevoked()) return;
         user.setRevoked(true);
+        user.setRevokedTimestamp(Instant.now());
         userRepository.save(user);
     }
 

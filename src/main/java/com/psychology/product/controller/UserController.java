@@ -13,20 +13,25 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
 @Slf4j
 @AllArgsConstructor
 @Tag(name = "User Controller", description = "Endpoints for working with user")
+@CrossOrigin(origins = "*")
 public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/")
+    @GetMapping("profile")
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @SecurityRequirement(name = "Bearer Authentication")
-    @Operation(summary = "Get current user", tags = {"User Library"})
+    @Operation(summary = "Get current user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User retrieved successfully"),
             @ApiResponse(responseCode = "404", description = "User not found"),
@@ -37,7 +42,8 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @PutMapping("/")
+    @PutMapping("/profile")
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Update current user")
     @ApiResponses(value = {
@@ -51,11 +57,12 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping("/profile")
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Disable user")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully Deleted"),
+            @ApiResponse(responseCode = "200", description = "Successfully Disabled"),
             @ApiResponse(responseCode = "403", description = "Haven't permission to disable user"),
             @ApiResponse(responseCode = "404", description = "User not found")
     })

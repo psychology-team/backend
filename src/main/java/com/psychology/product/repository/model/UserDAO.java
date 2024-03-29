@@ -46,6 +46,9 @@ public class UserDAO implements Serializable {
     @Column(name = "revoked")
     private Boolean revoked;
 
+    @Column(name = "revoked_timestamp")
+    private Instant revokedTimestamp;
+
     @Column(name = "created_timestamp")
     private Instant createdTimestamp;
 
