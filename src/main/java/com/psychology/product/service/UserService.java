@@ -6,6 +6,8 @@ import com.psychology.product.repository.model.UserDAO;
 import jakarta.security.auth.message.AuthException;
 import org.springframework.security.core.Authentication;
 
+import java.util.List;
+
 public interface UserService {
 
     UserDTO getCurrentUser();
@@ -19,4 +21,6 @@ public interface UserService {
     void disableUser() throws AuthException;
 
     UserDTO updateUser(UserDTO updated);
+
+    List<UserDTO> findAllUsers();
 }

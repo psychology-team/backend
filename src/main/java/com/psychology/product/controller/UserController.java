@@ -13,7 +13,10 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -25,7 +28,8 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/")
+    @GetMapping("profile")
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Get current user")
     @ApiResponses(value = {
@@ -38,7 +42,8 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @PutMapping("/")
+    @PutMapping("/profile")
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Update current user")
     @ApiResponses(value = {
@@ -52,7 +57,8 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping("/profile")
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Disable user")
     @ApiResponses(value = {
