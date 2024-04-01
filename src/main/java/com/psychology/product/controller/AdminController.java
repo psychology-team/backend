@@ -1,6 +1,7 @@
 package com.psychology.product.controller;
 
 import com.psychology.product.repository.dto.UserDTO;
+import com.psychology.product.service.AdminService;
 import com.psychology.product.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -11,10 +12,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/admin")
@@ -23,6 +26,7 @@ import java.util.List;
 public class AdminController {
 
     private final UserService userService;
+    private final AdminService adminService;
 
     @GetMapping("/clients-all")
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -36,5 +40,19 @@ public class AdminController {
     public ResponseEntity<?> showAllUsers() {
         List<UserDTO> allUsers = userService.findAllUsers();
         return ResponseEntity.ok(allUsers);
+    }
+
+    @GetMapping("/client/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(summary = "Get client")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "404", description = "Not found"),
+    })
+    public ResponseEntity<?> showClient(@PathVariable String id) {
+        UserDTO user = adminService.getCurrentClient(UUID.fromString(id));
+        return ResponseEntity.ok(user);
     }
 }
