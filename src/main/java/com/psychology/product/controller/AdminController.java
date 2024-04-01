@@ -1,8 +1,10 @@
 package com.psychology.product.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.psychology.product.repository.dto.UserDTO;
 import com.psychology.product.service.AdminService;
 import com.psychology.product.service.UserService;
+import com.psychology.product.util.JsonViews;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
