@@ -28,7 +28,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("profile")
+    @GetMapping("/profile")
     @JsonView(JsonViews.UserView.class)
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @SecurityRequirement(name = "Bearer Authentication")
