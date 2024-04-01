@@ -1,10 +1,8 @@
 package com.psychology.product.controller;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import com.psychology.product.repository.dto.UserDTO;
 import com.psychology.product.service.AdminService;
 import com.psychology.product.service.UserService;
-import com.psychology.product.util.JsonViews;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -53,7 +51,7 @@ public class AdminController {
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "404", description = "Not found"),
     })
-    public ResponseEntity<?> showOneClient(@PathVariable String id) {
+    public ResponseEntity<?> showClient(@PathVariable String id) {
         UserDTO user = adminService.getCurrentClient(UUID.fromString(id));
         return ResponseEntity.ok(user);
     }
