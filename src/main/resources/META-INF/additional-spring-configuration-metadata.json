@@ -19,5 +19,25 @@
       "name": "jwt.secret.refresh",
       "type": "java.lang.String",
       "description": "Description for jwt.secret.refresh."
+    },
+    {
+      "name": "application.server.host",
+      "type": "java.lang.String",
+      "description": "Description for application.server.host."
+    },
+    {
+      "name": "application.name",
+      "type": "java.lang.String",
+      "description": "Description for application.name."
+    },
+    {
+      "name": "developer.contact.names",
+      "type": "java.lang.String",
+      "description": "Description for developer.contact.names."
+    },
+    {
+      "name": "developer.contact.email",
+      "type": "java.lang.String",
+      "description": "Description for developer.contact.email."
     }
   ] }
