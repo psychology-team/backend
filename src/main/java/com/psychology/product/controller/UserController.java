@@ -63,7 +63,6 @@ public class UserController {
 
     @DeleteMapping("/profile")
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
-    @JsonView(JsonViews.UserView.class)
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Disable user")
     @ApiResponses(value = {
