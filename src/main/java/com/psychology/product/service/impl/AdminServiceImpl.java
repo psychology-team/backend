@@ -6,6 +6,7 @@ import com.psychology.product.repository.model.UserDAO;
 import com.psychology.product.service.AdminService;
 import com.psychology.product.service.UserMapper;
 import com.psychology.product.service.UserService;
+import com.psychology.product.util.exception.ConflictException;
 import com.psychology.product.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,5 +30,28 @@ public class AdminServiceImpl implements AdminService {
             return userMapper.toDTO(userDAO);
         }
         throw new NotFoundException("User not found");
+    }
+
+    @Override
+    public void disableClient(UUID clientId) {
+        Optional<UserDAO> userOptional = adminRepository.findById(clientId);
+        if (userOptional.isPresent()) {
+            UserDAO userDAO = adminRepository.getReferenceById(clientId);
+            if (userDAO.getRevoked()) {
+                throw new ConflictException("Client was disabled");
+            }
+            userDAO.setRevoked(true);
+            adminRepository.save(userDAO);
+        }
+    }
+
+    @Override
+    public void deleteClient(UUID clientId) {
+        Optional<UserDAO> userOptional = adminRepository.findById(clientId);
+        if (userOptional.isPresent()) {
+            adminRepository.deleteById(clientId);
+        } else {
+            throw new ConflictException("Client not found");
+        }
     }
 }

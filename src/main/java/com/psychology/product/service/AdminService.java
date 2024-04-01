@@ -6,4 +6,8 @@ import java.util.UUID;
 
 public interface AdminService {
     UserDTO getCurrentClient(UUID clientId);
+
+    void disableClient(UUID id);
+
+    void deleteClient(UUID uuid);
 }
