@@ -24,12 +24,13 @@ public class AdminController {
 
     private final UserService userService;
 
-    @GetMapping("/users-all")
+    @GetMapping("/clients-all")
     @PreAuthorize("hasAuthority('ADMIN')")
     @SecurityRequirement(name = "Bearer Authentication")
-    @Operation(summary = "Get all users")
+    @Operation(summary = "Get all clients")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Ok"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "403", description = "Forbidden"),
     })
     public ResponseEntity<?> showAllUsers() {
