@@ -23,6 +23,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -79,6 +80,14 @@ public class UserServiceImpl implements UserService {
         userRepository.save(current);
 
         return userMapper.toDTO(current);
+    }
+
+    @Override
+    public List<UserDTO> findAllUsers() {
+        List<UserDAO> users = userRepository.findAll();
+        return users.stream()
+                .map(userMapper::toDTO)
+                .toList();
     }
 
     @Override

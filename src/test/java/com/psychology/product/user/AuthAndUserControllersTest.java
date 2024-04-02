@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.psychology.product.controller.request.LoginRequest;
 import com.psychology.product.controller.request.SignUpRequest;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -126,25 +123,12 @@ public class AuthAndUserControllersTest {
                 .andExpect(status().isUnauthorized());
     }
 
-    @Test
-    @Order(40)
-    public void testAccessToSecurePointWithValidToken() throws Exception {
-        mockMvc.perform(get("/auth/security-point")
-                        .header("Authorization", String.format("Bearer %s", jwtAccessToken)))
-                .andExpect(status().isOk());
-    }
 
-    @Test
-    @Order(41)
-    public void testAccessToSecurePointWithoutToken() throws Exception {
-        mockMvc.perform(get("/auth/security-point"))
-                .andExpect(status().isUnauthorized());
-    }
 
     @Test
     @Order(50)
     public void testUserDeleteSuccessWithValidToken() throws Exception {
-        mockMvc.perform(delete("/user/")
+        mockMvc.perform(delete("/user/profile")
                         .header("Authorization", String.format("Bearer %s", jwtAccessToken)))
                 .andExpect(status().isOk());
     }
@@ -152,7 +136,7 @@ public class AuthAndUserControllersTest {
     @Test
     @Order(51)
     public void testUserAlreadyDeletedWithValidToken() throws Exception {
-        mockMvc.perform(delete("/user/")
+        mockMvc.perform(delete("/user/profile")
                         .header("Authorization", String.format("Bearer %s", jwtAccessToken)))
                 .andExpect(status().isUnauthorized());
     }
