@@ -123,36 +123,20 @@ public class AuthAndUserControllersTest {
                 .andExpect(status().isUnauthorized());
     }
 
-    @Test
-    @Order(40)
-    @Disabled
-    public void testAccessToSecurePointWithValidToken() throws Exception {
-        mockMvc.perform(get("/auth/security-point")
-                        .header("Authorization", String.format("Bearer %s", jwtAccessToken)))
-                .andExpect(status().isOk());
-    }
 
-    @Test
-    @Order(41)
-    public void testAccessToSecurePointWithoutToken() throws Exception {
-        mockMvc.perform(get("/auth/security-point"))
-                .andExpect(status().isUnauthorized());
-    }
 
     @Test
     @Order(50)
-    @Disabled
     public void testUserDeleteSuccessWithValidToken() throws Exception {
-        mockMvc.perform(delete("/user/")
+        mockMvc.perform(delete("/user/profile")
                         .header("Authorization", String.format("Bearer %s", jwtAccessToken)))
                 .andExpect(status().isOk());
     }
 
     @Test
     @Order(51)
-    @Disabled
     public void testUserAlreadyDeletedWithValidToken() throws Exception {
-        mockMvc.perform(delete("/user/")
+        mockMvc.perform(delete("/user/profile")
                         .header("Authorization", String.format("Bearer %s", jwtAccessToken)))
                 .andExpect(status().isUnauthorized());
     }
