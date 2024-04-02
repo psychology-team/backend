@@ -40,7 +40,7 @@ public class UserController {
     })
     public ResponseEntity<?> getUser() {
         UserDTO user = userService.getCurrentUser();
-        return ResponseEntity.ok(user);
+        return ResponseUtil.generateResponse("User success getting", HttpStatus.OK, user);
     }
 
     @PutMapping("/profile")
@@ -56,7 +56,7 @@ public class UserController {
     })
     public ResponseEntity<?> updateUser(@RequestBody UserDTO updated) {
         UserDTO user = userService.updateUser(updated);
-        return ResponseEntity.ok(user);
+        return ResponseUtil.generateResponse("User success updated", HttpStatus.OK, user);
     }
 
     @DeleteMapping("/profile")

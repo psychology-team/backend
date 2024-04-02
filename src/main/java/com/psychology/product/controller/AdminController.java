@@ -38,7 +38,7 @@ public class AdminController {
     })
     public ResponseEntity<?> showAllClients() {
         List<UserDTO> allUsers = userService.findAllUsers();
-        return ResponseEntity.ok(allUsers);
+        return ResponseUtil.generateResponse("Users success returned", HttpStatus.OK, allUsers);
     }
 
     @GetMapping("/client/{id}")
@@ -52,7 +52,7 @@ public class AdminController {
     })
     public ResponseEntity<?> showClient(@PathVariable String id) {
         UserDTO user = adminService.getCurrentClient(UUID.fromString(id));
-        return ResponseEntity.ok(user);
+        return ResponseUtil.generateResponse("Show client details", HttpStatus.OK, user);
     }
 
     @PutMapping("/client/{id}")
