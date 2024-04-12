@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,7 +14,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "diagnostics")
-public class DiagnosticDAO {
+
+public class DiagnosticDAO implements Serializable {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -28,6 +30,6 @@ public class DiagnosticDAO {
 
     @Transient
     @OneToMany(mappedBy = "diagnostic_id", cascade = CascadeType.ALL)
-    private List<QuestionDAO> questionDAOList;
+    private List<QuestionDAO> questionsList;
 
 }

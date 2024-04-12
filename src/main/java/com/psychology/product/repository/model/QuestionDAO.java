@@ -1,12 +1,13 @@
 package com.psychology.product.repository.model;
 
-import com.psychology.product.repository.model.AnswerDAO;
-import com.psychology.product.repository.model.DiagnosticDAO;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.psychology.product.util.JsonViews;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,8 +16,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "questions")
-
-public class QuestionDAO {
+@JsonView(JsonViews.Question.class)
+public class QuestionDAO implements Serializable {
 
     @Id
     @GeneratedValue(generator = "UUID")
