@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 @Entity
@@ -13,7 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Table(name = "answers")
 
-public class AnswerDAO {
+public class AnswerDAO implements Serializable {
 
     @Id
     @GeneratedValue(generator = "UUID")

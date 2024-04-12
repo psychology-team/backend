@@ -7,8 +7,9 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR
-        , uses = {QuestionMapper.class, AnswerMapper.class})
+@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR, uses = {QuestionMapper.class, AnswerMapper.class})
 public interface DiagnosticMapper {
-   List<DiagnosticDTO> toDTO(List<DiagnosticDAO> diagnostic);
+    DiagnosticDTO toDTO(DiagnosticDAO diagnostic);
+
+    List<DiagnosticDTO> toDTO(List<DiagnosticDAO> diagnostics);
 }

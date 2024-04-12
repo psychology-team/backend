@@ -17,8 +17,5 @@ public record QuestionDTO(@JsonProperty("question_id")
                           @JsonProperty("question_text")
                           String questionText,
                           @JsonProperty("answers")
-                          List<AnswerDTO> answerDTOList) {
-    public QuestionDTO addAnswersList(List<AnswerDTO> answersList) {
-        return new QuestionDTO(this.questionId, this.diagnosticId, this.questionText, answersList);
-    }
+                          List<AnswerDTO> answersList) {
 }

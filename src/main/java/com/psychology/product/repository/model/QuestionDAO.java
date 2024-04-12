@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.UUID;
 
 @Entity
 @Data
+@ToString(exclude = "answersList")
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "questions")
@@ -31,8 +33,7 @@ public class QuestionDAO implements Serializable {
     @Column(name = "question_text")
     private String questionText;
 
-    @Transient
-    @OneToMany(mappedBy = "question_id", cascade = CascadeType.ALL)
-    private List<AnswerDAO> answerDAOList;
+    @OneToMany(mappedBy = "questionDAO", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<AnswerDAO> answersList;
 
 }

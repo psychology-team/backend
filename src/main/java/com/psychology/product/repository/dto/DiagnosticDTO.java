@@ -18,7 +18,4 @@ public record DiagnosticDTO(
         @JsonProperty("diagnostic_questions")
         List<QuestionDTO> questionsList
 ) {
-    public DiagnosticDTO addQuestionsList(List<QuestionDTO> questionsList) {
-        return new DiagnosticDTO(this.diagnosticId, this.diagnosticName, this.diagnosticDescription, questionsList);
-    }
 }
