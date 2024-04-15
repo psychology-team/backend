@@ -15,12 +15,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/diagnostic")
@@ -35,7 +33,7 @@ public class DiagnosticController {
     @JsonView(JsonViews.UserView.class)
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @SecurityRequirement(name = "Bearer Authentication")
-    @Operation(summary = "Get diagnostic by id")
+    @Operation(summary = "Get all diagnostics")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "401", description = "Unauthorized")
@@ -43,5 +41,26 @@ public class DiagnosticController {
     public ResponseEntity<?> getAllDiagnostics() {
         List<DiagnosticDTO> diagnostic = diagnosticService.getAllDiagnostics();
         return ResponseUtil.generateResponse("Successfully return diagnostics", HttpStatus.OK, diagnostic);
+    }
+
+    @GetMapping("/{id}")
+    @JsonView(JsonViews.UserView.class)
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(summary = "Get diagnostic by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
+    public ResponseEntity<?> getDiagnosticById(@PathVariable UUID id) {
+        DiagnosticDTO diagnostic = diagnosticService.getDiagnosticById(id);
+        return ResponseUtil.generateResponse("Diagnostic", HttpStatus.OK, diagnostic);
+    }
+
+    @PostMapping("/new")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<?> changeDiagnostic(@RequestBody DiagnosticDTO current) {
+        DiagnosticDTO diagnostic = diagnosticService.addDiagnostic(current);
+        return ResponseUtil.generateResponse("Diagnostic", HttpStatus.OK, diagnostic);
     }
 }
