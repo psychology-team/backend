@@ -1,5 +1,6 @@
 package com.psychology.product.service;
 
+import com.psychology.product.repository.dto.AnswerDTO;
 import com.psychology.product.repository.dto.DiagnosticDTO;
 import com.psychology.product.repository.dto.QuestionDTO;
 
@@ -13,8 +14,14 @@ public interface DiagnosticService {
 
     DiagnosticDTO addDiagnostic(DiagnosticDTO diagnosticRequest);
 
+    AnswerDTO addAnswer(AnswerDTO answerRequest);
+
     QuestionDTO addQuestion(QuestionDTO questionRequest);
 
     void deleteDiagnostic(UUID id);
+
     void deleteQuestion(UUID id);
+
+    void deleteAnswer(UUID id);
+
 }

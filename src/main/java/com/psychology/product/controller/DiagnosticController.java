@@ -1,6 +1,7 @@
 package com.psychology.product.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.psychology.product.repository.dto.AnswerDTO;
 import com.psychology.product.repository.dto.DiagnosticDTO;
 import com.psychology.product.repository.dto.QuestionDTO;
 import com.psychology.product.service.DiagnosticService;
@@ -84,6 +85,18 @@ public class DiagnosticController {
         return ResponseUtil.generateResponse("Question was successfully added", HttpStatus.OK, question);
     }
 
+    @PostMapping("/answer/new")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Add new answer")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "400", description = "Validation failed")
+    })
+    public ResponseEntity<?> addAnswer(@Validated @RequestBody AnswerDTO answerRequest) {
+        AnswerDTO answer = diagnosticService.addAnswer(answerRequest);
+        return ResponseUtil.generateResponse("Answer was successfully added", HttpStatus.OK, answer);
+    }
+
     @DeleteMapping("/diagnostic/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Delete diagnostic")
@@ -106,5 +119,17 @@ public class DiagnosticController {
     public ResponseEntity<?> deleteQuestion(@PathVariable UUID id) {
         diagnosticService.deleteQuestion(id);
         return ResponseUtil.generateResponse("Question successfully deleted", HttpStatus.OK);
+    }
+
+    @DeleteMapping("/answer/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Delete answer")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "404", description = "Answer not found")
+    })
+    public ResponseEntity<?> deleteAnswer(@PathVariable UUID id) {
+        diagnosticService.deleteAnswer(id);
+        return ResponseUtil.generateResponse("Answer successfully deleted", HttpStatus.OK);
     }
 }
