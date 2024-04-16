@@ -43,4 +43,10 @@ public class DiagnosticServiceImpl implements DiagnosticService {
         return diagnosticMapper.toDTO(diagnostic);
     }
 
+    @Override
+    public void deleteDiagnostic(UUID id) {
+        DiagnosticDAO diagnosticDAO = diagnosticRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Diagnostic not found"));
+        diagnosticRepository.delete(diagnosticDAO);
+    }
 }

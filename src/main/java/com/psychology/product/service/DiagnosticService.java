@@ -11,4 +11,6 @@ public interface DiagnosticService {
     DiagnosticDTO getDiagnosticById(UUID id);
 
     DiagnosticDTO addDiagnostic(DiagnosticDTO current);
+
+    void deleteDiagnostic(UUID id);
 }

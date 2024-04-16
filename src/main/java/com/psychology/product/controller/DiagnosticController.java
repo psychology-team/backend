@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -60,8 +61,25 @@ public class DiagnosticController {
 
     @PostMapping("/new")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<?> addDiagnostic(@RequestBody DiagnosticDTO current) {
+    @Operation(summary = "Add new diagnostic")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "400", description = "Validation failed")
+    })
+    public ResponseEntity<?> addDiagnostic(@Validated @RequestBody DiagnosticDTO current) {
         DiagnosticDTO diagnostic = diagnosticService.addDiagnostic(current);
-        return ResponseUtil.generateResponse("Diagnostic", HttpStatus.OK, diagnostic);
+        return ResponseUtil.generateResponse("Diagnostic was successfully added", HttpStatus.OK, diagnostic);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Delete diagnostic")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "404", description = "Diagnostic not found")
+    })
+    public ResponseEntity<?> deleteDiagnostic(@PathVariable UUID id) {
+        diagnosticService.deleteDiagnostic(id);
+        return ResponseUtil.generateResponse("Diagnostic successfully deleted", HttpStatus.OK);
     }
 }
