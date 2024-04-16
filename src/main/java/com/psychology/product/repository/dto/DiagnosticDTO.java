@@ -1,5 +1,6 @@
 package com.psychology.product.repository.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.psychology.product.util.JsonViews;
@@ -22,6 +23,7 @@ public record DiagnosticDTO(
         @NotBlank
         String diagnosticDescription,
         @JsonProperty("diagnostic_questions")
+        @JsonInclude(JsonInclude.Include.NON_NULL)
         List<QuestionDTO> questionsList
 ) {
 }

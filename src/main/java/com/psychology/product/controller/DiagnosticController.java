@@ -2,6 +2,7 @@ package com.psychology.product.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.psychology.product.repository.dto.DiagnosticDTO;
+import com.psychology.product.repository.dto.QuestionDTO;
 import com.psychology.product.service.DiagnosticService;
 import com.psychology.product.util.JsonViews;
 import com.psychology.product.util.ResponseUtil;
@@ -44,7 +45,7 @@ public class DiagnosticController {
         return ResponseUtil.generateResponse("Successfully return diagnostics", HttpStatus.OK, diagnostic);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/diagnostic//{id}")
     @JsonView(JsonViews.UserView.class)
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @SecurityRequirement(name = "Bearer Authentication")
@@ -59,19 +60,31 @@ public class DiagnosticController {
         return ResponseUtil.generateResponse("Diagnostic", HttpStatus.OK, diagnostic);
     }
 
-    @PostMapping("/new")
+    @PostMapping("/diagnostic/new")
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Add new diagnostic")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "400", description = "Validation failed")
     })
-    public ResponseEntity<?> addDiagnostic(@Validated @RequestBody DiagnosticDTO current) {
-        DiagnosticDTO diagnostic = diagnosticService.addDiagnostic(current);
+    public ResponseEntity<?> addDiagnostic(@Validated @RequestBody DiagnosticDTO diagnosticRequest) {
+        DiagnosticDTO diagnostic = diagnosticService.addDiagnostic(diagnosticRequest);
         return ResponseUtil.generateResponse("Diagnostic was successfully added", HttpStatus.OK, diagnostic);
     }
 
-    @DeleteMapping("/{id}")
+    @PostMapping("/question/new")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Add new question")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "400", description = "Validation failed")
+    })
+    public ResponseEntity<?> addQuestion(@Validated @RequestBody QuestionDTO questionRequest) {
+        QuestionDTO question = diagnosticService.addQuestion(questionRequest);
+        return ResponseUtil.generateResponse("Question was successfully added", HttpStatus.OK, question);
+    }
+
+    @DeleteMapping("/diagnostic/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Delete diagnostic")
     @ApiResponses(value = {
@@ -81,5 +94,17 @@ public class DiagnosticController {
     public ResponseEntity<?> deleteDiagnostic(@PathVariable UUID id) {
         diagnosticService.deleteDiagnostic(id);
         return ResponseUtil.generateResponse("Diagnostic successfully deleted", HttpStatus.OK);
+    }
+
+    @DeleteMapping("/question/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Delete question")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "404", description = "Question not found")
+    })
+    public ResponseEntity<?> deleteQuestion(@PathVariable UUID id) {
+        diagnosticService.deleteQuestion(id);
+        return ResponseUtil.generateResponse("Question successfully deleted", HttpStatus.OK);
     }
 }

@@ -1,17 +1,20 @@
 package com.psychology.product.service.impl;
 
 import com.psychology.product.repository.DiagnosticRepository;
+import com.psychology.product.repository.QuestionRepository;
 import com.psychology.product.repository.dto.DiagnosticDTO;
+import com.psychology.product.repository.dto.QuestionDTO;
 import com.psychology.product.repository.model.DiagnosticDAO;
+import com.psychology.product.repository.model.QuestionDAO;
 import com.psychology.product.service.DiagnosticService;
 import com.psychology.product.service.mapper.DiagnosticMapper;
+import com.psychology.product.service.mapper.QuestionMapper;
 import com.psychology.product.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -19,7 +22,9 @@ import java.util.UUID;
 @Slf4j
 public class DiagnosticServiceImpl implements DiagnosticService {
     private final DiagnosticRepository diagnosticRepository;
+    private final QuestionRepository questionRepository;
     private final DiagnosticMapper diagnosticMapper;
+    private final QuestionMapper questionMapper;
 
     @Override
     public List<DiagnosticDTO> getAllDiagnostics() {
@@ -34,13 +39,26 @@ public class DiagnosticServiceImpl implements DiagnosticService {
     }
 
     @Override
-    public DiagnosticDTO addDiagnostic(DiagnosticDTO current) {
+    public DiagnosticDTO addDiagnostic(DiagnosticDTO diagnosticRequest) {
         DiagnosticDAO diagnostic = new DiagnosticDAO();
-        Optional.ofNullable(current.diagnosticId()).ifPresent(diagnostic::setDiagnosticId);
-        Optional.ofNullable(current.diagnosticName()).ifPresent(diagnostic::setDiagnosticName);
+        diagnostic.setDiagnosticName(diagnosticRequest.diagnosticName());
+        diagnostic.setDiagnosticDescription(diagnosticRequest.diagnosticDescription());
 
         diagnosticRepository.save(diagnostic);
         return diagnosticMapper.toDTO(diagnostic);
+    }
+
+    @Override
+    public QuestionDTO addQuestion(QuestionDTO questionRequest) {
+        DiagnosticDAO diagnostic = diagnosticRepository.findById(questionRequest.diagnosticId())
+                .orElseThrow(() -> new NotFoundException("Diagnostic not found"));
+
+        QuestionDAO question = new QuestionDAO();
+        question.setDiagnosticDAO(diagnostic);
+        question.setQuestionText(questionRequest.questionText());
+        questionRepository.save(question);
+
+        return questionMapper.toDTO(question);
     }
 
     @Override
@@ -48,5 +66,12 @@ public class DiagnosticServiceImpl implements DiagnosticService {
         DiagnosticDAO diagnosticDAO = diagnosticRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Diagnostic not found"));
         diagnosticRepository.delete(diagnosticDAO);
+    }
+
+    @Override
+    public void deleteQuestion(UUID id) {
+        QuestionDAO questionDAO = questionRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Question not found"));
+        questionRepository.delete(questionDAO);
     }
 }
