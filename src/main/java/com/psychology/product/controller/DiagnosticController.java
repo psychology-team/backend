@@ -50,6 +50,7 @@ public class DiagnosticController {
     @Operation(summary = "Get diagnostic by id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "404", description = "Not Found"),
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
     public ResponseEntity<?> getDiagnosticById(@PathVariable UUID id) {
@@ -59,7 +60,7 @@ public class DiagnosticController {
 
     @PostMapping("/new")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<?> changeDiagnostic(@RequestBody DiagnosticDTO current) {
+    public ResponseEntity<?> addDiagnostic(@RequestBody DiagnosticDTO current) {
         DiagnosticDTO diagnostic = diagnosticService.addDiagnostic(current);
         return ResponseUtil.generateResponse("Diagnostic", HttpStatus.OK, diagnostic);
     }

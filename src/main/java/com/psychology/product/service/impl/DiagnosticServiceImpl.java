@@ -5,6 +5,7 @@ import com.psychology.product.repository.dto.DiagnosticDTO;
 import com.psychology.product.repository.model.DiagnosticDAO;
 import com.psychology.product.service.DiagnosticService;
 import com.psychology.product.service.mapper.DiagnosticMapper;
+import com.psychology.product.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,15 +28,14 @@ public class DiagnosticServiceImpl implements DiagnosticService {
     }
 
     public DiagnosticDTO getDiagnosticById(UUID id) {
-        DiagnosticDAO diagnosticDAO = diagnosticRepository.findById(id).orElse(null);
+        DiagnosticDAO diagnosticDAO = diagnosticRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Diagnostic not found"));
         return diagnosticMapper.toDTO(diagnosticDAO);
     }
 
     @Override
     public DiagnosticDTO addDiagnostic(DiagnosticDTO current) {
-        UUID diagnosticId = UUID.randomUUID();
         DiagnosticDAO diagnostic = new DiagnosticDAO();
-        diagnostic.setDiagnosticId(diagnosticId);
         Optional.ofNullable(current.diagnosticId()).ifPresent(diagnostic::setDiagnosticId);
         Optional.ofNullable(current.diagnosticName()).ifPresent(diagnostic::setDiagnosticName);
 
