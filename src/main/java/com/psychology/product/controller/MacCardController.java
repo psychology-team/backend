@@ -36,7 +36,7 @@ public class MacCardController {
             @ApiResponse(responseCode = "201", description = "Created"),
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
     })
-    public ResponseEntity<?> createAdvertisement(
+    public ResponseEntity<?> createCard(
             @RequestPart("images") List<MultipartFile> images
     ) {
         macCardService.createCard(images);

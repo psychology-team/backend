@@ -4,6 +4,7 @@ import com.psychology.product.repository.ImageRepository;
 import com.psychology.product.repository.model.ImageDAO;
 import com.psychology.product.service.ImageService;
 import com.psychology.product.util.exception.BadRequestException;
+import com.psychology.product.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public Optional<ImageDAO> getImageById(UUID id) {
-        return imageRepository.findById(id);
+        return Optional.ofNullable(imageRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Image not found")));
     }
 }
