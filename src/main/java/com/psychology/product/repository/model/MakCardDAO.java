@@ -36,4 +36,8 @@ public class MakCardDAO {
             inverseJoinColumns = @JoinColumn(name = "image_id")
     )
     private List<ImageDAO> images;
+
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    private UserDAO user;
 }
