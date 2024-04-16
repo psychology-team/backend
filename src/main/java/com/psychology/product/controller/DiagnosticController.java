@@ -1,7 +1,9 @@
 package com.psychology.product.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.psychology.product.repository.dto.AnswerDTO;
 import com.psychology.product.repository.dto.DiagnosticDTO;
+import com.psychology.product.repository.dto.QuestionDTO;
 import com.psychology.product.service.DiagnosticService;
 import com.psychology.product.util.JsonViews;
 import com.psychology.product.util.ResponseUtil;
@@ -15,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -60,8 +63,79 @@ public class DiagnosticController {
 
     @PostMapping("/new")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<?> addDiagnostic(@RequestBody DiagnosticDTO current) {
-        DiagnosticDTO diagnostic = diagnosticService.addDiagnostic(current);
-        return ResponseUtil.generateResponse("Diagnostic", HttpStatus.OK, diagnostic);
+    @Operation(summary = "Add new diagnostic")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "400", description = "Validation failed"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
+    public ResponseEntity<?> addDiagnostic(@Validated @RequestBody DiagnosticDTO diagnosticRequest) {
+        DiagnosticDTO diagnostic = diagnosticService.addDiagnostic(diagnosticRequest);
+        return ResponseUtil.generateResponse("Diagnostic was successfully added", HttpStatus.OK, diagnostic);
+    }
+
+    @PostMapping("/question/new")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Add new question")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "400", description = "Validation failed"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
+    public ResponseEntity<?> addQuestion(@Validated @RequestBody QuestionDTO questionRequest) {
+        QuestionDTO question = diagnosticService.addQuestion(questionRequest);
+        return ResponseUtil.generateResponse("Question was successfully added", HttpStatus.OK, question);
+    }
+
+    @PostMapping("/answer/new")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Add new answer")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "400", description = "Validation failed"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
+    public ResponseEntity<?> addAnswer(@Validated @RequestBody AnswerDTO answerRequest) {
+        AnswerDTO answer = diagnosticService.addAnswer(answerRequest);
+        return ResponseUtil.generateResponse("Answer was successfully added", HttpStatus.OK, answer);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Delete diagnostic by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "404", description = "Diagnostic not found")
+    })
+    public ResponseEntity<?> deleteDiagnostic(@PathVariable UUID id) {
+        diagnosticService.deleteDiagnostic(id);
+        return ResponseUtil.generateResponse("Diagnostic successfully deleted", HttpStatus.OK);
+    }
+
+    @DeleteMapping("/question/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Delete question by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "404", description = "Question not found")
+    })
+    public ResponseEntity<?> deleteQuestion(@PathVariable UUID id) {
+        diagnosticService.deleteQuestion(id);
+        return ResponseUtil.generateResponse("Question successfully deleted", HttpStatus.OK);
+    }
+
+    @DeleteMapping("/answer/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Delete answer by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "404", description = "Answer not found")
+    })
+    public ResponseEntity<?> deleteAnswer(@PathVariable UUID id) {
+        diagnosticService.deleteAnswer(id);
+        return ResponseUtil.generateResponse("Answer successfully deleted", HttpStatus.OK);
     }
 }
