@@ -6,7 +6,7 @@ import com.psychology.product.repository.dto.UserDTO;
 import com.psychology.product.repository.model.UserAuthority;
 import com.psychology.product.repository.model.UserDAO;
 import com.psychology.product.service.JwtUtils;
-import com.psychology.product.service.UserMapper;
+import com.psychology.product.service.mapper.UserMapper;
 import com.psychology.product.service.UserService;
 import com.psychology.product.util.exception.ConflictException;
 import com.psychology.product.util.exception.NotFoundException;
@@ -19,7 +19,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 

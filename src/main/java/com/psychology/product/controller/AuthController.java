@@ -59,11 +59,6 @@ public class AuthController {
         return ResponseUtil.generateResponse("Successfully Authenticated", HttpStatus.OK, jwtResponse);
     }
 
-    @GetMapping("/security-point")
-    public void login() {
-        System.out.println("Success");
-    }
-
     @PostMapping("/refresh/access-token")
     @Operation(summary = "Refresh jwt access token")
     @ApiResponses({

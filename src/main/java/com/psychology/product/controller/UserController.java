@@ -1,7 +1,9 @@
 package com.psychology.product.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.psychology.product.repository.dto.UserDTO;
 import com.psychology.product.service.UserService;
+import com.psychology.product.util.JsonViews;
 import com.psychology.product.util.ResponseUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -16,8 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/user")
 @Slf4j
@@ -28,7 +28,8 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("profile")
+    @GetMapping("/profile")
+    @JsonView(JsonViews.UserView.class)
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Get current user")
@@ -39,11 +40,12 @@ public class UserController {
     })
     public ResponseEntity<?> getUser() {
         UserDTO user = userService.getCurrentUser();
-        return ResponseEntity.ok(user);
+        return ResponseUtil.generateResponse("User success getting", HttpStatus.OK, user);
     }
 
     @PutMapping("/profile")
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
+    @JsonView(JsonViews.UserView.class)
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Update current user")
     @ApiResponses(value = {
@@ -54,7 +56,7 @@ public class UserController {
     })
     public ResponseEntity<?> updateUser(@RequestBody UserDTO updated) {
         UserDTO user = userService.updateUser(updated);
-        return ResponseEntity.ok(user);
+        return ResponseUtil.generateResponse("User success updated", HttpStatus.OK, user);
     }
 
     @DeleteMapping("/profile")
@@ -70,6 +72,5 @@ public class UserController {
         userService.disableUser();
         return ResponseUtil.generateResponse("User was disabled.", HttpStatus.OK);
     }
-
 
 }
