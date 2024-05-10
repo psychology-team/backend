@@ -3,6 +3,7 @@ package com.psychology.product.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.psychology.product.repository.dto.AnswerDTO;
 import com.psychology.product.repository.dto.DiagnosticDTO;
+import com.psychology.product.repository.dto.DiagnosticResultDTO;
 import com.psychology.product.repository.dto.QuestionDTO;
 import com.psychology.product.service.DiagnosticService;
 import com.psychology.product.util.JsonViews;
@@ -145,6 +146,32 @@ public class DiagnosticController {
     QuestionDTO questionModifyRequest) {
         DiagnosticDTO diagnostic = diagnosticService.modifyQuestion(id, questionModifyRequest);
         return ResponseUtil.generateResponse("Question successfully modified", HttpStatus.OK, diagnostic);
+    }
+
+    @PostMapping("/result/")
+    @JsonView(JsonViews.UserView.class)
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
+    @Operation(summary = "Add diagnostic result")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(ref = "DiagnosticResultDTO")
+            )),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "404", description = "Answer not found")
+    })
+    public ResponseEntity<?> passedDiagnosticResult(@RequestBody
+                                                    @Schema(example =
+                                                            """
+                                                                    {
+                                                                        "user_id":"def98e80-9a09-4dbd-bfc5-735257730b03",
+                                                                        "diagnostic_id":"322c7f32-dc56-416a-83fe-b7fa696fdf19",
+                                                                        "interpretation_points":23,
+                                                                        "scale_points":12
+                                                                    }""")
+                                                    DiagnosticResultDTO diagnosticResultDTO) {
+        DiagnosticResultDTO diagnosticResult = diagnosticService.passedDiagnosticResult(diagnosticResultDTO);
+        return ResponseUtil.generateResponse("Diagnostic result successfully added", HttpStatus.OK, diagnosticResult);
     }
 
     @PutMapping("/answer/{id}")

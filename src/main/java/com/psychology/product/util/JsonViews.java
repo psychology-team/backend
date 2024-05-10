@@ -25,7 +25,10 @@ public final class JsonViews {
     public interface Answer {
     }
 
-    public interface UserView extends UUID, FirstName, LastName, Email, Phone, Diagnostic, Question, Answer {
+    public interface DiagnosticResult {
+    }
+
+    public interface UserView extends UUID, FirstName, LastName, Email, Phone, Diagnostic, Question, Answer, DiagnosticResult {
 
     }
 }

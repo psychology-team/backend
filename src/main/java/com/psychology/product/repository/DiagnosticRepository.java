@@ -8,6 +8,5 @@ import java.util.List;
 import java.util.UUID;
 
 public interface DiagnosticRepository extends JpaRepository<DiagnosticDAO, UUID> {
-    DiagnosticDAO getByDiagnosticId(UUID id);
     @NotNull List<DiagnosticDAO> findAll();
 }

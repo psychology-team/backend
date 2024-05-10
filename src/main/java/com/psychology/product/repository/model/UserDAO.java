@@ -58,6 +58,6 @@ public class UserDAO implements Serializable {
 
     @Transient
     @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL)
-    private List<UserDiagnosticResultDAO> diagnosticResultDAOList;
+    private List<DiagnosticResultDAO> diagnosticResultDAOList;
 
 }

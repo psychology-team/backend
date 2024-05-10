@@ -9,10 +9,10 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 
-@JsonView(JsonViews.Diagnostic.class)
-public record UserDiagnosticResultDTO(
+@JsonView(JsonViews.DiagnosticResult.class)
+public record DiagnosticResultDTO(
         @JsonProperty("user_id")
-        UserDTO userId,
+        UUID userId,
         @JsonProperty("diagnostic_id")
         UUID diagnosticId,
         @JsonProperty("interpretation_points")

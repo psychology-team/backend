@@ -3,6 +3,7 @@ package com.psychology.product.service;
 import com.psychology.product.repository.dto.AnswerDTO;
 import com.psychology.product.repository.dto.DiagnosticDTO;
 import com.psychology.product.repository.dto.QuestionDTO;
+import com.psychology.product.repository.dto.DiagnosticResultDTO;
 
 import java.util.List;
 import java.util.UUID;
@@ -30,4 +31,5 @@ public interface DiagnosticService {
 
     void deleteAnswer(UUID id);
 
+    DiagnosticResultDTO passedDiagnosticResult(DiagnosticResultDTO userDiagnosticResultRequest);
 }
