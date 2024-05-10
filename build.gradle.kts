@@ -73,6 +73,8 @@ dependencies {
     // Utilities
     implementation("org.jetbrains", "annotations", "24.1.0")
     implementation("org.springdoc", "springdoc-openapi-starter-webmvc-ui", "2.3.0")
+    implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")
+
 
     // Testing
     testImplementation("org.springframework.boot", "spring-boot-starter-test")
