@@ -55,6 +55,17 @@ public class DiagnosticServiceImpl implements DiagnosticService {
     }
 
     @Override
+    public DiagnosticDTO modifyDiagnostic(UUID id, DiagnosticDTO diagnosticRequest) {
+        DiagnosticDAO diagnostic = diagnosticRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Diagnostic not found"));
+        diagnostic.setDiagnosticName(diagnosticRequest.diagnosticName());
+        diagnostic.setDiagnosticDescription(diagnosticRequest.diagnosticDescription());
+
+        diagnosticRepository.save(diagnostic);
+        return diagnosticMapper.toDTO(diagnostic);
+    }
+
+    @Override
     public AnswerDTO addAnswer(AnswerDTO answerRequest) {
         QuestionDAO question = questionRepository.findById(answerRequest.questionId())
                 .orElseThrow(() -> new NotFoundException("Question not found"));
@@ -69,6 +80,18 @@ public class DiagnosticServiceImpl implements DiagnosticService {
     }
 
     @Override
+    public DiagnosticDTO modifyAnswer(UUID id, AnswerDTO answerRequest) {
+        AnswerDAO answer = answerRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Answer not found"));
+        answer.setAnswerText(answerRequest.answerText());
+        answer.setInterpretationPoints(answerRequest.interpretationPoints());
+        answer.setScalePoints(answerRequest.scalePoints());
+
+        answerRepository.save(answer);
+        return diagnosticMapper.toDTO(answer.getQuestionDAO().getDiagnosticDAO());
+    }
+
+    @Override
     public QuestionDTO addQuestion(QuestionDTO questionRequest) {
         DiagnosticDAO diagnostic = diagnosticRepository.findById(questionRequest.diagnosticId())
                 .orElseThrow(() -> new NotFoundException("Diagnostic not found"));
@@ -79,6 +102,16 @@ public class DiagnosticServiceImpl implements DiagnosticService {
         questionRepository.save(question);
 
         return questionMapper.toDTO(question);
+    }
+
+    @Override
+    public DiagnosticDTO modifyQuestion(UUID id, QuestionDTO questionRequest) {
+        QuestionDAO question = questionRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Question not found"));
+        question.setQuestionText(questionRequest.questionText());
+
+        questionRepository.save(question);
+        return diagnosticMapper.toDTO(question.getDiagnosticDAO());
     }
 
     @Override

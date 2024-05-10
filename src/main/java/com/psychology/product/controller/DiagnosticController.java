@@ -8,6 +8,8 @@ import com.psychology.product.service.DiagnosticService;
 import com.psychology.product.util.JsonViews;
 import com.psychology.product.util.ResponseUtil;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -15,6 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -98,6 +101,74 @@ public class DiagnosticController {
     public ResponseEntity<?> addAnswer(@Validated @RequestBody AnswerDTO answerRequest) {
         AnswerDTO answer = diagnosticService.addAnswer(answerRequest);
         return ResponseUtil.generateResponse("Answer was successfully added", HttpStatus.OK, answer);
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Modify diagnostic by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(ref = "DiagnosticDTO")
+            )),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "404", description = "Diagnostic not found")
+    })
+    public ResponseEntity<?> modifyDiagnostic(@PathVariable UUID id, @Validated @RequestBody
+    @Schema(example =
+            """
+                    {
+                      "diagnostic_name": "Modified name",
+                      "diagnostic_description": "Modified description"
+                    }""") DiagnosticDTO diagnosticModifyRequest) {
+        DiagnosticDTO diagnostic = diagnosticService.modifyDiagnostic(id, diagnosticModifyRequest);
+        return ResponseUtil.generateResponse("Diagnostic successfully modified", HttpStatus.OK, diagnostic);
+    }
+
+    @PutMapping("/question/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Modify question by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(ref = "DiagnosticDTO")
+            )),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "404", description = "Question not found")
+    })
+    public ResponseEntity<?> modifyQuestion(@PathVariable UUID id, @Validated @RequestBody
+    @Schema(example =
+            """
+                    {
+                       "question_text": "Modified question"
+                     }""")
+    QuestionDTO questionModifyRequest) {
+        DiagnosticDTO diagnostic = diagnosticService.modifyQuestion(id, questionModifyRequest);
+        return ResponseUtil.generateResponse("Question successfully modified", HttpStatus.OK, diagnostic);
+    }
+
+    @PutMapping("/answer/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Modify answer by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(ref = "DiagnosticDTO")
+            )),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "404", description = "Answer not found")
+    })
+    public ResponseEntity<?> modifyAnswer(@PathVariable UUID id, @Validated @RequestBody
+    @Schema(example =
+            """
+                    {
+                        "answer_text": "Modified answer",
+                        "interpretation_points": 2,
+                        "scale_points": 2
+                    }""")
+    AnswerDTO answerModifyRequest) {
+        DiagnosticDTO diagnostic = diagnosticService.modifyAnswer(id, answerModifyRequest);
+        return ResponseUtil.generateResponse("Answer successfully modified", HttpStatus.OK, diagnostic);
     }
 
     @DeleteMapping("/{id}")

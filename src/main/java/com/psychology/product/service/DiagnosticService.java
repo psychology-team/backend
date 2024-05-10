@@ -14,9 +14,15 @@ public interface DiagnosticService {
 
     DiagnosticDTO addDiagnostic(DiagnosticDTO diagnosticRequest);
 
+    DiagnosticDTO modifyDiagnostic(UUID id, DiagnosticDTO diagnosticRequest);
+
     AnswerDTO addAnswer(AnswerDTO answerRequest);
 
+    DiagnosticDTO modifyAnswer(UUID id, AnswerDTO answerRequest);
+
     QuestionDTO addQuestion(QuestionDTO questionRequest);
+
+    DiagnosticDTO modifyQuestion(UUID id, QuestionDTO questionRequest);
 
     void deleteDiagnostic(UUID id);
 
