@@ -2,23 +2,20 @@ package com.psychology.product.service.impl;
 
 import com.psychology.product.repository.AnswerRepository;
 import com.psychology.product.repository.DiagnosticRepository;
+import com.psychology.product.repository.DiagnosticResultRepository;
 import com.psychology.product.repository.QuestionRepository;
-import com.psychology.product.repository.dto.AnswerDTO;
-import com.psychology.product.repository.dto.DiagnosticDTO;
-import com.psychology.product.repository.dto.QuestionDTO;
-import com.psychology.product.repository.model.AnswerDAO;
-import com.psychology.product.repository.model.DiagnosticDAO;
-import com.psychology.product.repository.model.QuestionDAO;
+import com.psychology.product.repository.dto.*;
+import com.psychology.product.repository.model.*;
 import com.psychology.product.service.DiagnosticService;
-import com.psychology.product.service.mapper.AnswerMapper;
-import com.psychology.product.service.mapper.DiagnosticMapper;
-import com.psychology.product.service.mapper.QuestionMapper;
+import com.psychology.product.service.mapper.*;
+import com.psychology.product.util.exception.ConflictException;
 import com.psychology.product.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -26,11 +23,15 @@ import java.util.UUID;
 @Slf4j
 public class DiagnosticServiceImpl implements DiagnosticService {
     private final DiagnosticRepository diagnosticRepository;
+    private final DiagnosticResultRepository diagnosticResultRepository;
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
     private final DiagnosticMapper diagnosticMapper;
     private final QuestionMapper questionMapper;
     private final AnswerMapper answerMapper;
+    private final UserServiceImpl userService;
+    private final UserMapper userMapper;
+    private final DiagnosticResultMapper diagnosticResultMapper;
 
     @Override
     public List<DiagnosticDTO> getAllDiagnostics() {
@@ -133,5 +134,31 @@ public class DiagnosticServiceImpl implements DiagnosticService {
         AnswerDAO answerDAO = answerRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Answer not found"));
         answerRepository.delete(answerDAO);
+    }
+
+    @Override
+    public DiagnosticResultDTO passedDiagnosticResult(DiagnosticResultDTO diagnosticResultRequest) {
+        Optional.ofNullable(diagnosticResultRepository.findByUserDAO_IdAndDiagnosticDAO_DiagnosticId(diagnosticResultRequest.userId(), diagnosticResultRequest.diagnosticId()))
+                .ifPresent(diagnosticResultDAO -> {
+                    throw new ConflictException("Result for this diagnostic already exist");
+                });
+
+        DiagnosticDAO diagnosticDAO = diagnosticRepository.findById(diagnosticResultRequest.diagnosticId())
+                .orElseThrow(() -> new NotFoundException("Diagnostic not found"));
+        UserDTO userDTO = userService.getCurrentUser();
+
+        if (!userDTO.id().equals(diagnosticResultRequest.userId()))
+            throw new ConflictException("You don't have permission for add result for another user");
+
+        UserDAO user = userMapper.toDAO(userDTO);
+
+        DiagnosticResultDAO diagnosticResultDAO = new DiagnosticResultDAO();
+        diagnosticResultDAO.setDiagnosticDAO(diagnosticDAO);
+        diagnosticResultDAO.setUserDAO(user);
+        diagnosticResultDAO.setScalePoints(diagnosticResultRequest.scalePoints());
+        diagnosticResultDAO.setInterpretationPoints(diagnosticResultRequest.interpretationPoints());
+
+        diagnosticResultRepository.save(diagnosticResultDAO);
+        return diagnosticResultMapper.toDTO(diagnosticResultDAO);
     }
 }
