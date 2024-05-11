@@ -9,6 +9,7 @@ import com.psychology.product.service.DiagnosticService;
 import com.psychology.product.util.JsonViews;
 import com.psychology.product.util.ResponseUtil;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -173,6 +174,24 @@ public class DiagnosticController {
         DiagnosticResultDTO diagnosticResult = diagnosticService.passedDiagnosticResult(diagnosticResultDTO);
         return ResponseUtil.generateResponse("Diagnostic result successfully added", HttpStatus.OK, diagnosticResult);
     }
+
+    @GetMapping("/result/")
+    @JsonView(JsonViews.UserView.class)
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
+    @Operation(summary = "Get diagnostic results for current user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    array = @ArraySchema(schema = @Schema(implementation = DiagnosticResultDTO.class))
+
+            )),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
+    public ResponseEntity<?> getDiagnosticResultForCurrentUser() {
+        List<DiagnosticResultDTO> diagnosticResults = diagnosticService.getDiagnosticResultForCurrentUser();
+        return ResponseUtil.generateResponse("Returned diagnostic results for current user", HttpStatus.OK, diagnosticResults);
+    }
+
 
     @PutMapping("/answer/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")

@@ -161,4 +161,11 @@ public class DiagnosticServiceImpl implements DiagnosticService {
         diagnosticResultRepository.save(diagnosticResultDAO);
         return diagnosticResultMapper.toDTO(diagnosticResultDAO);
     }
+
+    @Override
+    public List<DiagnosticResultDTO> getDiagnosticResultForCurrentUser() {
+        UserDTO userDTO = userService.getCurrentUser();
+        List<DiagnosticResultDAO> diagnosticResultDAOList = diagnosticResultRepository.getAllByUserDAO_Id(userDTO.id());
+        return diagnosticResultMapper.toDTO(diagnosticResultDAOList);
+    }
 }
