@@ -32,4 +32,6 @@ public interface DiagnosticService {
     void deleteAnswer(UUID id);
 
     DiagnosticResultDTO passedDiagnosticResult(DiagnosticResultDTO userDiagnosticResultRequest);
+
+    List<DiagnosticResultDTO> getDiagnosticResultForCurrentUser();
 }
