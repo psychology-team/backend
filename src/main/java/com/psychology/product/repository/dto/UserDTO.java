@@ -1,5 +1,6 @@
 package com.psychology.product.repository.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.psychology.product.util.JsonViews;
 
@@ -15,6 +16,7 @@ public record UserDTO(
         @JsonView(JsonViews.Email.class)
         String email,
         @JsonView(JsonViews.Phone.class)
+        @JsonInclude(JsonInclude.Include.NON_NULL)
         String phone,
         Boolean enabled,
         Boolean revoked) {
