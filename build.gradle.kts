@@ -58,6 +58,7 @@ dependencies {
     implementation("org.postgresql", "postgresql", "42.7.1")
     runtimeOnly("org.postgresql", "postgresql")
     testImplementation("com.h2database:h2:2.2.224")
+    implementation("org.flywaydb", "flyway-core")
 
     // Mappings
     val mapstruct = "1.5.0.Final"
