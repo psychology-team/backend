@@ -14,4 +14,5 @@ public interface AuthService {
 
     JwtResponse getJwtRefreshToken(String refreshToken) throws AuthException;
 
+    void logout();
 }

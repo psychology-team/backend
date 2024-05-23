@@ -48,6 +48,11 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
+    public void logout(UserDTO user) {
+        deactivatePreviousTokens(user);
+    }
+
+    @Override
     public void revokedToken(TokenDTO tokenDTO) {
     }
 
@@ -62,11 +67,12 @@ public class TokenServiceImpl implements TokenService {
     }
 
     void deactivatePreviousTokens(UserDTO user) {
-        List<TokenDAO> tokensList = tokenRepository.findAllByUser_Email(user.email());
+        List<TokenDAO> tokensList = tokenRepository.findAllByUser_Id(user.id());
         tokensList.forEach(token -> {
             token.setRevoked(true);
             token.setExpired(true);
         });
+        tokenRepository.saveAll(tokensList);
     }
 
 }

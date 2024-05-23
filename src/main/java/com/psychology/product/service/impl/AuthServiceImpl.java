@@ -2,6 +2,7 @@ package com.psychology.product.service.impl;
 
 import com.psychology.product.controller.request.LoginRequest;
 import com.psychology.product.controller.response.JwtResponse;
+import com.psychology.product.repository.dto.UserDTO;
 import com.psychology.product.repository.model.UserDAO;
 import com.psychology.product.service.AuthService;
 import com.psychology.product.service.JwtUtils;
@@ -67,6 +68,12 @@ public class AuthServiceImpl implements AuthService {
             return new JwtResponse(access, refresh);
         }
         throw new AuthException("Invalid token");
+    }
+
+    @Override
+    public void logout() {
+        UserDTO userDTO = userService.getCurrentUser();
+        tokenService.logout(userDTO);
     }
 
 

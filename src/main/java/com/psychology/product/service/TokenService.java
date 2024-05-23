@@ -1,6 +1,7 @@
 package com.psychology.product.service;
 
 import com.psychology.product.repository.dto.TokenDTO;
+import com.psychology.product.repository.dto.UserDTO;
 import com.psychology.product.util.Tokens;
 import org.springframework.security.core.Authentication;
 
@@ -12,4 +13,5 @@ public interface TokenService {
     boolean isTokenRevoked(TokenDTO tokenDTO);
 
     Tokens recordTokens(Authentication authentication);
+    void logout(UserDTO userDTO);
 }

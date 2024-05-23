@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -36,10 +37,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         token = authHeader.substring(7);
 
         TokenDAO tokenDAO = tokenRepository.findByToken(token);
-        if (tokenDAO.isExpired() || tokenDAO.isRevoked()) {
-            throw new InsufficientAuthenticationException("Token is revoked or expired");
-        } else {
-            filterChain.doFilter(request, response);
-        }
+
+        Optional.ofNullable(tokenDAO).ifPresent(tokenDAOPresent -> {
+            if (tokenDAOPresent.isExpired() || tokenDAOPresent.isRevoked()) {
+                throw new InsufficientAuthenticationException("Token is revoked or expired");
+            }
+        });
+
+        filterChain.doFilter(request, response);
     }
 }
