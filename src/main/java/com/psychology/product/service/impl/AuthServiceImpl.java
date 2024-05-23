@@ -5,7 +5,9 @@ import com.psychology.product.controller.response.JwtResponse;
 import com.psychology.product.repository.model.UserDAO;
 import com.psychology.product.service.AuthService;
 import com.psychology.product.service.JwtUtils;
+import com.psychology.product.service.TokenService;
 import com.psychology.product.service.UserService;
+import com.psychology.product.util.Tokens;
 import com.psychology.product.util.exception.ForbiddenException;
 import io.jsonwebtoken.Claims;
 import jakarta.security.auth.message.AuthException;
@@ -15,7 +17,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -29,6 +30,7 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
     private final UserService userService;
+    private final TokenService tokenService;
     private final Map<String, String> refreshStorage = new HashMap<>();
 
     public void saveJwtRefreshToken(String email, String jwtRefreshToken) {
@@ -42,15 +44,8 @@ public class AuthServiceImpl implements AuthService {
                 new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password())
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        String jwtAccessToken = jwtUtils.generateJwtToken(authentication);
-        String jwtRefreshToken;
-
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        jwtRefreshToken = jwtUtils.generateRefreshToken(authentication);
-        saveJwtRefreshToken(userDetails.getUsername(), jwtRefreshToken);
-
-        return new JwtResponse(jwtAccessToken, jwtRefreshToken);
+        Tokens generatedTokens = tokenService.recordTokens(authentication);
+        return new JwtResponse(generatedTokens.accessToken(), generatedTokens.refreshToken());
     }
 
     @Override

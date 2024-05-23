@@ -12,6 +12,8 @@ public interface UserService {
 
     UserDTO getCurrentUser();
 
+    UserDTO getUserFromEmail(String email);
+
     void createNewUser(SignUpRequest signUpRequest);
 
     UserDAO findUserByEmail(String email);
