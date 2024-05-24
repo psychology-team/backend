@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import jakarta.security.auth.message.AuthException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +42,7 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "Bad Request"),
             @ApiResponse(responseCode = "409", description = "Conflict")
     })
-    public ResponseEntity<?> signup(@Validated @RequestBody SignUpRequest signUpRequest) {
+    public ResponseEntity<?> signup(@Validated @RequestBody SignUpRequest signUpRequest) throws MessagingException {
         userService.createNewUser(signUpRequest);
         return ResponseUtil.generateResponse("Created", HttpStatus.CREATED);
     }

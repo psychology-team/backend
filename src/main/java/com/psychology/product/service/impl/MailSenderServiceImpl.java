@@ -47,7 +47,7 @@ public class MailSenderServiceImpl implements MailService {
         context.setVariable("username", user.getFirstName());
         context.setVariable("host", frontendHost);
         context.setVariable("code", user.getUniqueCode());
-        sendSimpleMessage(user.getEmail(), "Registration", "activation_message_ua", context);
+        sendSimpleMessage(user.getEmail(), "Registration", "activation_message", context);
     }
 
     @Override
@@ -56,6 +56,6 @@ public class MailSenderServiceImpl implements MailService {
         context.setVariable("username", user.getFirstName());
         context.setVariable("host", frontendHost);
         context.setVariable("code", user.getUniqueCode());
-        sendSimpleMessage(user.getEmail(), "Reset password", "reset_password_message_ua", context);
+        sendSimpleMessage(user.getEmail(), "Reset password", "reset_password_message", context);
     }
 }

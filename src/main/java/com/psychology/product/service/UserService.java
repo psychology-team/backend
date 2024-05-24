@@ -3,6 +3,7 @@ package com.psychology.product.service;
 import com.psychology.product.controller.request.SignUpRequest;
 import com.psychology.product.repository.dto.UserDTO;
 import com.psychology.product.repository.model.UserDAO;
+import jakarta.mail.MessagingException;
 import jakarta.security.auth.message.AuthException;
 import org.springframework.security.core.Authentication;
 
@@ -12,7 +13,7 @@ public interface UserService {
 
     UserDTO getCurrentUser();
 
-    void createNewUser(SignUpRequest signUpRequest);
+    void createNewUser(SignUpRequest signUpRequest) throws MessagingException;
 
     UserDAO findUserByEmail(String email);
 

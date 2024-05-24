@@ -6,10 +6,12 @@ import com.psychology.product.repository.dto.UserDTO;
 import com.psychology.product.repository.model.UserAuthority;
 import com.psychology.product.repository.model.UserDAO;
 import com.psychology.product.service.JwtUtils;
+import com.psychology.product.service.MailService;
 import com.psychology.product.service.UserService;
 import com.psychology.product.service.mapper.UserMapper;
 import com.psychology.product.util.exception.ConflictException;
 import com.psychology.product.util.exception.NotFoundException;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +37,7 @@ public class UserServiceImpl implements UserService {
     private final UserDetailsService userDetailsService;
     private final JwtUtils jwtUtils;
     private final UserMapper userMapper;
+    private final MailService mailService;
 
     @Override
     public UserDTO getCurrentUser() {
@@ -45,7 +48,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void createNewUser(SignUpRequest signUpRequest) {
+    public void createNewUser(SignUpRequest signUpRequest) throws MessagingException {
 
         String email = signUpRequest.email();
         boolean isEmailAlreadyUsed = userRepository.findByEmail(email).isPresent();
@@ -64,6 +67,7 @@ public class UserServiceImpl implements UserService {
         user.setRevoked(false);
 
         userRepository.save(user);
+        mailService.sendRegistrationMail(user);
 
     }
 
