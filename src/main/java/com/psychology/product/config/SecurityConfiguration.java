@@ -64,7 +64,7 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers(HttpMethod.GET, "/auth/security-point").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/auth/").permitAll()
                         .requestMatchers( "/user/**").authenticated()
                         .anyRequest().permitAll()
                 )

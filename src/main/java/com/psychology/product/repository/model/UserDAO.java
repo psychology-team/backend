@@ -52,6 +52,9 @@ public class UserDAO implements Serializable {
     @Column(name = "created_timestamp")
     private Instant createdTimestamp;
 
+    @Column(name = "unique_code", unique = true)
+    private String uniqueCode;
+
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(Types.ARRAY)
     private Set<UserAuthority> authorities;

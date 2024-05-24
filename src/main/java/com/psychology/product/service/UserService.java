@@ -23,4 +23,6 @@ public interface UserService {
     UserDTO updateUser(UserDTO updated);
 
     List<UserDTO> findAllUsers();
+
+    void activateUser(String uniqueCode);
 }

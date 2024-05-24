@@ -49,6 +49,7 @@ dependencies {
     implementation("org.springdoc", "springdoc-openapi-starter-webmvc-ui", "2.2.0")
     developmentOnly("org.springframework.boot", "spring-boot-devtools")
     testImplementation("org.springframework.security", "spring-security-test")
+    implementation("org.springframework.boot", "spring-boot-starter-thymeleaf")
 
     // Validation
     implementation("jakarta.validation", "jakarta.validation-api", "3.1.0-M1")
@@ -74,6 +75,8 @@ dependencies {
     // Utilities
     implementation("org.jetbrains", "annotations", "24.1.0")
     implementation("org.springdoc", "springdoc-openapi-starter-webmvc-ui", "2.3.0")
+    implementation("jakarta.mail:jakarta.mail-api:2.1.3")
+
 
     // Testing
     testImplementation("org.springframework.boot", "spring-boot-starter-test")

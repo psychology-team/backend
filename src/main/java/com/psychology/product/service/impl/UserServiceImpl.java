@@ -23,10 +23,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.time.Instant;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -62,7 +59,8 @@ public class UserServiceImpl implements UserService {
         user.setPhone(signUpRequest.phone());
         user.setAuthorities((Set.of(UserAuthority.USER)));
         user.setCreatedTimestamp(Instant.now());
-        user.setEnabled(true);
+        user.setEnabled(false);
+        user.setUniqueCode(String.valueOf(new Random().nextInt(999999)));
         user.setRevoked(false);
 
         userRepository.save(user);
@@ -112,6 +110,15 @@ public class UserServiceImpl implements UserService {
     public Authentication userAuthentication(UserDAO user) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+    }
+
+    @Override
+    public void activateUser(String uniqueCode) {
+        UserDAO user = userRepository.findByUniqueCode(uniqueCode)
+                .orElseThrow(() -> new NotFoundException("Invalid code"));
+        user.setEnabled(true);
+        user.setUniqueCode(null);
+        userRepository.save(user);
     }
 
     private String getTokenFromRequest() {
