@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -60,6 +61,7 @@ public class TokenServiceImpl implements TokenService {
     public void deactivateToken(TokenDAO tokenDAO) {
         tokenDAO.setRevoked(true);
         tokenDAO.setExpired(true);
+        tokenDAO.setUpdatedTimestamp(Instant.now());
         tokenRepository.save(tokenDAO);
     }
 

@@ -45,7 +45,7 @@ public class AuthServiceImpl implements AuthService {
         if (jwtUtils.validateJwtRefreshToken(refreshToken)) {
             Authentication authentication = authenticateWithRefreshToken(refreshToken);
             Tokens tokens = tokenService.generateAccessToken(authentication, refreshToken);
-            return new JwtResponse(tokens.accessToken(), null);
+            return new JwtResponse(tokens.accessToken(), refreshToken);
         }
         throw new AuthException("Invalid token");
     }
