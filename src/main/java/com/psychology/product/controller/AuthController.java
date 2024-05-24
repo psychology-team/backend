@@ -85,4 +85,15 @@ public class AuthController {
         return ResponseUtil.generateResponse("Tokens", HttpStatus.OK, tokens);
     }
 
+    @PostMapping("/logout")
+    @Operation(summary = "Logout")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
+    public ResponseEntity<?> logout() {
+        authService.logout();
+        return ResponseUtil.generateResponse("Logout success", HttpStatus.OK);
+    }
+
 }

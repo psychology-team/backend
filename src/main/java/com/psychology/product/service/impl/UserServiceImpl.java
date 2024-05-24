@@ -48,6 +48,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDTO getUserFromEmail(String email) {
+        UserDAO userDAO = findUserByEmail(email);
+        return userMapper.toDTO(userDAO);
+    }
+
+    @Override
     public void createNewUser(SignUpRequest signUpRequest) {
 
         String email = signUpRequest.email();
