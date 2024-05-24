@@ -1,7 +1,6 @@
 package com.psychology.product.service.impl;
 
 import com.psychology.product.repository.TokenRepository;
-import com.psychology.product.repository.UserRepository;
 import com.psychology.product.repository.dto.TokenDTO;
 import com.psychology.product.repository.dto.UserDTO;
 import com.psychology.product.repository.model.TokenDAO;
@@ -9,7 +8,6 @@ import com.psychology.product.service.JwtUtils;
 import com.psychology.product.service.TokenService;
 import com.psychology.product.service.UserService;
 import com.psychology.product.service.mapper.TokenMapper;
-import com.psychology.product.service.mapper.UserMapper;
 import com.psychology.product.util.Tokens;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -23,16 +21,12 @@ public class TokenServiceImpl implements TokenService {
 
     private final TokenRepository tokenRepository;
     private final TokenMapper tokenMapper;
-    private final UserRepository userRepository;
-    private final UserMapper userMapper;
     private final JwtUtils jwtUtils;
     private final UserService userService;
 
     @Override
-    public Tokens recordTokens(Authentication authentication) {
-
+    public Tokens generateNewTokens(Authentication authentication) {
         UserDTO user = userService.getUserFromEmail(authentication.getName());
-
         deactivatePreviousTokens(user);
 
         String jwtAccessToken = jwtUtils.generateJwtToken(authentication);
@@ -48,31 +42,43 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
+    public Tokens generateAccessToken(Authentication authentication, String refreshToken) {
+        UserDTO user = userService.getUserFromEmail(authentication.getName());
+        String jwtAccessToken = jwtUtils.generateJwtToken(authentication);
+        TokenDTO accessToken = new TokenDTO(jwtAccessToken, user);
+        deactivateAccessAndSaveRefresh(authentication, refreshToken);
+        tokenRepository.save(tokenMapper.toDAO(accessToken));
+        return new Tokens(jwtAccessToken, null);
+    }
+
+    @Override
     public void logout(UserDTO user) {
         deactivatePreviousTokens(user);
     }
 
     @Override
-    public void revokedToken(TokenDTO tokenDTO) {
+    public void deactivateToken(TokenDAO tokenDAO) {
+        tokenDAO.setRevoked(true);
+        tokenDAO.setExpired(true);
+        tokenRepository.save(tokenDAO);
     }
 
     @Override
-    public boolean isTokenExpired(TokenDTO tokenDTO) {
-        return false;
-    }
+    public void deactivateAccessAndSaveRefresh(Authentication authentication, String refreshToken) {
+        UserDTO user = userService.getUserFromEmail(authentication.getName());
 
-    @Override
-    public boolean isTokenRevoked(TokenDTO tokenDTO) {
-        return false;
-    }
-
-    void deactivatePreviousTokens(UserDTO user) {
         List<TokenDAO> tokensList = tokenRepository.findAllByUser_Id(user.id());
         tokensList.forEach(token -> {
-            token.setRevoked(true);
-            token.setExpired(true);
+            if (!token.getToken().equals(refreshToken)) {
+                deactivateToken(token);
+            }
         });
-        tokenRepository.saveAll(tokensList);
     }
 
+    @Override
+    public void deactivatePreviousTokens(UserDTO user) {
+        List<TokenDAO> tokensList = tokenRepository.findAllByUser_Id(user.id());
+        tokensList.forEach(this::deactivateToken);
+        tokenRepository.saveAll(tokensList);
+    }
 }

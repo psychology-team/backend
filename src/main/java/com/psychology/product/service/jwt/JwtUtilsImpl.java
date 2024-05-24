@@ -82,7 +82,8 @@ public class JwtUtilsImpl implements JwtUtils {
     }
 
     public boolean validateJwtRefreshToken(@NonNull String token) {
-        return validateJwtToken(token, jwtRefreshSecret);
+        TokenDAO tokenDAO = tokenRepository.findByToken(token);
+        return validateJwtToken(token, jwtRefreshSecret) && (!tokenDAO.isExpired() && !tokenDAO.isRevoked());
     }
 
     public Claims getRefreshClaims(@NonNull String token) {

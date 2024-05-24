@@ -1,17 +1,21 @@
 package com.psychology.product.service;
 
-import com.psychology.product.repository.dto.TokenDTO;
 import com.psychology.product.repository.dto.UserDTO;
+import com.psychology.product.repository.model.TokenDAO;
 import com.psychology.product.util.Tokens;
 import org.springframework.security.core.Authentication;
 
 public interface TokenService {
-    void revokedToken(TokenDTO tokenDTO);
 
-    boolean isTokenExpired(TokenDTO tokenDTO);
+    Tokens generateNewTokens(Authentication authentication);
 
-    boolean isTokenRevoked(TokenDTO tokenDTO);
+    Tokens generateAccessToken(Authentication authentication, String refreshToken);
 
-    Tokens recordTokens(Authentication authentication);
     void logout(UserDTO userDTO);
+
+    void deactivateToken(TokenDAO tokenDAO);
+
+    void deactivateAccessAndSaveRefresh(Authentication authentication, String refreshToken);
+
+    void deactivatePreviousTokens(UserDTO userDTO);
 }

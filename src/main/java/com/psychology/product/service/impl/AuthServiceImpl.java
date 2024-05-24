@@ -20,9 +20,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -32,12 +29,6 @@ public class AuthServiceImpl implements AuthService {
     private final JwtUtils jwtUtils;
     private final UserService userService;
     private final TokenService tokenService;
-    private final Map<String, String> refreshStorage = new HashMap<>();
-
-    public void saveJwtRefreshToken(String email, String jwtRefreshToken) {
-        refreshStorage.put(email, jwtRefreshToken);
-    }
-
 
     @Override
     public JwtResponse loginUser(LoginRequest loginRequest) {
@@ -45,7 +36,7 @@ public class AuthServiceImpl implements AuthService {
                 new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password())
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        Tokens generatedTokens = tokenService.recordTokens(authentication);
+        Tokens generatedTokens = tokenService.generateNewTokens(authentication);
         return new JwtResponse(generatedTokens.accessToken(), generatedTokens.refreshToken());
     }
 
@@ -53,8 +44,8 @@ public class AuthServiceImpl implements AuthService {
     public JwtResponse getJwtAccessToken(String refreshToken) throws AuthException {
         if (jwtUtils.validateJwtRefreshToken(refreshToken)) {
             Authentication authentication = authenticateWithRefreshToken(refreshToken);
-            String accessToken = jwtUtils.generateJwtToken(authentication);
-            return new JwtResponse(accessToken, null);
+            Tokens tokens = tokenService.generateAccessToken(authentication, refreshToken);
+            return new JwtResponse(tokens.accessToken(), null);
         }
         throw new AuthException("Invalid token");
     }
@@ -63,9 +54,8 @@ public class AuthServiceImpl implements AuthService {
     public JwtResponse getJwtRefreshToken(String refreshToken) throws AuthException {
         if (jwtUtils.validateJwtRefreshToken(refreshToken)) {
             Authentication authentication = authenticateWithRefreshToken(refreshToken);
-            String access = jwtUtils.generateJwtToken(authentication);
-            String refresh = jwtUtils.generateRefreshToken(authentication);
-            return new JwtResponse(access, refresh);
+            Tokens tokens = tokenService.generateNewTokens(authentication);
+            return new JwtResponse(tokens.accessToken(), tokens.refreshToken());
         }
         throw new AuthException("Invalid token");
     }
@@ -83,10 +73,6 @@ public class AuthServiceImpl implements AuthService {
         }
         Claims claims = jwtUtils.getRefreshClaims(refreshToken);
         String login = claims.getSubject();
-        String saveRefreshToken = refreshStorage.get(login);
-        if (saveRefreshToken == null || !saveRefreshToken.equals(refreshToken)) {
-            throw new ForbiddenException("Invalid refresh token.");
-        }
         UserDAO user = new UserDAO();
         user.setEmail(login);
         Authentication authentication = userService.userAuthentication(user);
