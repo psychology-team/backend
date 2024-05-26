@@ -15,7 +15,7 @@ public interface UserService {
 
     UserDTO getUserFromEmail(String email);
 
-    void createNewUser(SignUpRequest signUpRequest);
+    void createNewUser(SignUpRequest signUpRequest) throws MessagingException;
 
     UserDAO findUserByEmail(String email);
 
