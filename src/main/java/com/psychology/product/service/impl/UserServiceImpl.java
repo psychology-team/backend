@@ -6,12 +6,10 @@ import com.psychology.product.repository.dto.UserDTO;
 import com.psychology.product.repository.model.UserAuthority;
 import com.psychology.product.repository.model.UserDAO;
 import com.psychology.product.service.JwtUtils;
-import com.psychology.product.service.MailService;
 import com.psychology.product.service.UserService;
 import com.psychology.product.service.mapper.UserMapper;
 import com.psychology.product.util.exception.ConflictException;
 import com.psychology.product.util.exception.NotFoundException;
-import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +42,12 @@ public class UserServiceImpl implements UserService {
         String tokenFromRequest = getTokenFromRequest();
         String emailFromRequest = jwtUtils.getEmailFromJwtToken(tokenFromRequest);
         UserDAO userDAO = findUserByEmail(emailFromRequest);
+        return userMapper.toDTO(userDAO);
+    }
+
+    @Override
+    public UserDTO getUserFromEmail(String email) {
+        UserDAO userDAO = findUserByEmail(email);
         return userMapper.toDTO(userDAO);
     }
 

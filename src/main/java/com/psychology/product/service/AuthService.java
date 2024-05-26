@@ -10,8 +10,7 @@ public interface AuthService {
 
     JwtResponse getJwtAccessToken(@NotNull String refreshToken) throws AuthException;
 
-    void saveJwtRefreshToken(String email, String jwtRefreshToken);
-
     JwtResponse getJwtRefreshToken(String refreshToken) throws AuthException;
 
+    void logout();
 }

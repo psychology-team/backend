@@ -14,7 +14,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.mail.MessagingException;
 import jakarta.security.auth.message.AuthException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +41,7 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "Bad Request"),
             @ApiResponse(responseCode = "409", description = "Conflict")
     })
-    public ResponseEntity<?> signup(@Validated @RequestBody SignUpRequest signUpRequest) throws MessagingException {
+    public ResponseEntity<?> signup(@Validated @RequestBody SignUpRequest signUpRequest) {
         userService.createNewUser(signUpRequest);
         return ResponseUtil.generateResponse("Created", HttpStatus.CREATED);
     }
@@ -101,6 +100,17 @@ public class AuthController {
     public ResponseEntity<?> activateUser(@PathVariable("code") String code) {
         userService.activateUser(code);
         return ResponseUtil.generateResponse("User activated successfully!", HttpStatus.OK);
+    }
+
+    @PostMapping("/logout")
+    @Operation(summary = "Logout")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
+    public ResponseEntity<?> logout() {
+        authService.logout();
+        return ResponseUtil.generateResponse("Logout success", HttpStatus.OK);
     }
 
 }

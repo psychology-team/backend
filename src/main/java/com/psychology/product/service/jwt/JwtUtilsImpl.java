@@ -1,5 +1,7 @@
 package com.psychology.product.service.jwt;
 
+import com.psychology.product.repository.TokenRepository;
+import com.psychology.product.repository.model.TokenDAO;
 import com.psychology.product.service.JwtUtils;
 import com.psychology.product.service.impl.UserDetailsImpl;
 import io.jsonwebtoken.Claims;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.security.Key;
 import java.util.Date;
+import java.util.Optional;
 
 @Component
 @Slf4j
@@ -30,13 +33,15 @@ public class JwtUtilsImpl implements JwtUtils {
 
     private final Key jwtAccessSecret;
     private final SecretKey jwtRefreshSecret;
+    private final TokenRepository tokenRepository;
 
     public JwtUtilsImpl(
             @Value(("${jwt.secret.access}")) String jwtAccessSecret,
-            @Value(("${jwt.secret.refresh}")) String jwtRefreshSecret
-    ) {
+            @Value(("${jwt.secret.refresh}")) String jwtRefreshSecret,
+            TokenRepository tokenRepository) {
         this.jwtAccessSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtAccessSecret));
         this.jwtRefreshSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtRefreshSecret));
+        this.tokenRepository = tokenRepository;
     }
 
     public String generateJwtToken(@NonNull Authentication authentication) {
@@ -77,7 +82,8 @@ public class JwtUtilsImpl implements JwtUtils {
     }
 
     public boolean validateJwtRefreshToken(@NonNull String token) {
-        return validateJwtToken(token, jwtRefreshSecret);
+        TokenDAO tokenDAO = tokenRepository.findByToken(token);
+        return validateJwtToken(token, jwtRefreshSecret) && (!tokenDAO.isExpired() && !tokenDAO.isRevoked());
     }
 
     public Claims getRefreshClaims(@NonNull String token) {
@@ -90,6 +96,11 @@ public class JwtUtilsImpl implements JwtUtils {
             return true;
 
         } catch (ExpiredJwtException e) {
+            TokenDAO tokenDAO = tokenRepository.findByToken(token);
+            Optional.ofNullable(tokenDAO).ifPresent(tokenDAOPresent -> {
+                tokenDAOPresent.setExpired(true);
+                tokenRepository.save(tokenDAO);
+            });
             log.error("JWT token is expired");
         } catch (UnsupportedJwtException e) {
             log.error("JWT token is unsupported");
