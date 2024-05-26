@@ -39,5 +39,10 @@
       "name": "developer.contact.email",
       "type": "java.lang.String",
       "description": "Description for developer.contact.email."
+    },
+    {
+      "name": "application.server.port",
+      "type": "java.lang.String",
+      "description": "Description for application.server.port."
     }
   ] }

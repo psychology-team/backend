@@ -13,5 +13,5 @@ public interface UserRepository extends JpaRepository<UserDAO, UUID> {
     Optional<UserDAO> findByEmail(String email);
     @NotNull Optional<UserDAO> findById(@NotNull UUID uuid);
     Optional<List<UserDAO>> findAllByRevokedTimestampLessThanEqual(Instant revokedTime);
-
+    Optional<UserDAO> findByUniqueCode(String uniqueCode);
 }

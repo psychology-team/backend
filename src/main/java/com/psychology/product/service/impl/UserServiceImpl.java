@@ -6,10 +6,12 @@ import com.psychology.product.repository.dto.UserDTO;
 import com.psychology.product.repository.model.UserAuthority;
 import com.psychology.product.repository.model.UserDAO;
 import com.psychology.product.service.JwtUtils;
+import com.psychology.product.service.MailService;
 import com.psychology.product.service.UserService;
 import com.psychology.product.service.mapper.UserMapper;
 import com.psychology.product.util.exception.ConflictException;
 import com.psychology.product.util.exception.NotFoundException;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,10 +25,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.time.Instant;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +37,7 @@ public class UserServiceImpl implements UserService {
     private final UserDetailsService userDetailsService;
     private final JwtUtils jwtUtils;
     private final UserMapper userMapper;
+    private final MailService mailService;
 
     @Override
     public UserDTO getCurrentUser() {
@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void createNewUser(SignUpRequest signUpRequest) {
+    public void createNewUser(SignUpRequest signUpRequest) throws MessagingException {
 
         String email = signUpRequest.email();
         boolean isEmailAlreadyUsed = userRepository.findByEmail(email).isPresent();
@@ -68,10 +68,12 @@ public class UserServiceImpl implements UserService {
         user.setPhone(signUpRequest.phone());
         user.setAuthorities((Set.of(UserAuthority.USER)));
         user.setCreatedTimestamp(Instant.now());
-        user.setEnabled(true);
+        user.setEnabled(false);
+        user.setUniqueCode(String.valueOf(new Random().nextInt(999999)));
         user.setRevoked(false);
 
         userRepository.save(user);
+        mailService.sendRegistrationMail(user);
 
     }
 
@@ -118,6 +120,15 @@ public class UserServiceImpl implements UserService {
     public Authentication userAuthentication(UserDAO user) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+    }
+
+    @Override
+    public void activateUser(String uniqueCode) {
+        UserDAO user = userRepository.findByUniqueCode(uniqueCode)
+                .orElseThrow(() -> new NotFoundException("Invalid code"));
+        user.setEnabled(true);
+        user.setUniqueCode(null);
+        userRepository.save(user);
     }
 
     private String getTokenFromRequest() {
