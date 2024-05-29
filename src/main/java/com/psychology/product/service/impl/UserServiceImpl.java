@@ -1,5 +1,6 @@
 package com.psychology.product.service.impl;
 
+import com.psychology.product.controller.request.ForgotPasswordRequest;
 import com.psychology.product.controller.request.SignUpRequest;
 import com.psychology.product.repository.UserRepository;
 import com.psychology.product.repository.dto.UserDTO;
@@ -129,6 +130,19 @@ public class UserServiceImpl implements UserService {
         user.setEnabled(true);
         user.setUniqueCode(null);
         userRepository.save(user);
+    }
+
+    @Override
+    public void forgotPassword(ForgotPasswordRequest request) {
+        UserDAO user = userRepository.findByEmail(request.email())
+                .orElseThrow(() -> new NotFoundException("User not found"));
+        user.setUniqueCode(String.valueOf(new Random().nextInt(999999)));
+        userRepository.save(user);
+        try {
+            mailService.sendResetPasswordMail(user);
+        } catch (MessagingException e) {
+            throw new IllegalArgumentException("Could not send email");
+        }
     }
 
     private String getTokenFromRequest() {

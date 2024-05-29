@@ -1,10 +1,12 @@
 package com.psychology.product.service;
 
+import com.psychology.product.controller.request.ForgotPasswordRequest;
 import com.psychology.product.controller.request.SignUpRequest;
 import com.psychology.product.repository.dto.UserDTO;
 import com.psychology.product.repository.model.UserDAO;
 import jakarta.mail.MessagingException;
 import jakarta.security.auth.message.AuthException;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 
 import java.util.List;
@@ -28,4 +30,6 @@ public interface UserService {
     List<UserDTO> findAllUsers();
 
     void activateUser(String uniqueCode);
+
+    void forgotPassword(ForgotPasswordRequest email);
 }

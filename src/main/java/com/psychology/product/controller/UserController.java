@@ -1,6 +1,7 @@
 package com.psychology.product.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.psychology.product.controller.request.ForgotPasswordRequest;
 import com.psychology.product.repository.dto.UserDTO;
 import com.psychology.product.service.UserService;
 import com.psychology.product.util.JsonViews;
@@ -71,6 +72,17 @@ public class UserController {
     public ResponseEntity<?> disableUser() throws AuthException {
         userService.disableUser();
         return ResponseUtil.generateResponse("User was disabled.", HttpStatus.OK);
+    }
+
+    @PostMapping("/password/forgot")
+    @Operation(description = "Send a unique code to user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok"),
+            @ApiResponse(responseCode = "404", description = "User not found")
+    })
+    public ResponseEntity<?> forgotPassword(ForgotPasswordRequest email) {
+        userService.forgotPassword(email);
+        return ResponseUtil.generateResponse("Ok",HttpStatus.OK);
     }
 
 }
