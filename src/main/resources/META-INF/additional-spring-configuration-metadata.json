@@ -44,5 +44,10 @@
       "name": "application.server.port",
       "type": "java.lang.String",
       "description": "Description for application.server.port."
+    },
+    {
+      "name": "server.frontend.host",
+      "type": "java.lang.String",
+      "description": "Description for server.frontend.host."
     }
   ] }
