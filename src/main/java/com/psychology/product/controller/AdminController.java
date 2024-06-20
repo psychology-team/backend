@@ -4,6 +4,7 @@ import com.psychology.product.repository.dto.UserDTO;
 import com.psychology.product.service.AdminService;
 import com.psychology.product.service.UserService;
 import com.psychology.product.util.ResponseUtil;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
+@Hidden
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
