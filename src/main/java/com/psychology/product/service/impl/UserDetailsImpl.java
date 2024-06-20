@@ -1,6 +1,6 @@
 package com.psychology.product.service.impl;
 
-import com.psychology.product.repository.model.UserDAO;
+import com.psychology.product.repository.model.User;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,9 +10,9 @@ import java.util.Collection;
 @Data
 public class UserDetailsImpl implements UserDetails {
 
-    private UserDAO user;
+    private User user;
 
-    public UserDetailsImpl(UserDAO user) {
+    public UserDetailsImpl(User user) {
         this.user = user;
     }
 

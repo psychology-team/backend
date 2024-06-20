@@ -1,7 +1,7 @@
 package com.psychology.product.service.jwt;
 
 import com.psychology.product.repository.TokenRepository;
-import com.psychology.product.repository.model.TokenDAO;
+import com.psychology.product.repository.model.Token;
 import com.psychology.product.service.JwtUtils;
 import com.psychology.product.service.impl.UserDetailsImpl;
 import io.jsonwebtoken.Claims;
@@ -82,7 +82,7 @@ public class JwtUtilsImpl implements JwtUtils {
     }
 
     public boolean validateJwtRefreshToken(@NonNull String token) {
-        TokenDAO tokenDAO = tokenRepository.findByToken(token);
+        Token tokenDAO = tokenRepository.findByToken(token);
         return validateJwtToken(token, jwtRefreshSecret) && (!tokenDAO.isExpired() && !tokenDAO.isRevoked());
     }
 
@@ -96,7 +96,7 @@ public class JwtUtilsImpl implements JwtUtils {
             return true;
 
         } catch (ExpiredJwtException e) {
-            TokenDAO tokenDAO = tokenRepository.findByToken(token);
+            Token tokenDAO = tokenRepository.findByToken(token);
             Optional.ofNullable(tokenDAO).ifPresent(tokenDAOPresent -> {
                 tokenDAOPresent.setExpired(true);
                 tokenRepository.save(tokenDAO);

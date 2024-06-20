@@ -1,12 +1,14 @@
 package com.psychology.product.service;
 
-import com.psychology.product.repository.dto.MakCardDTO;
-import com.psychology.product.repository.model.MakCardDAO;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 public interface MacCardService {
-    MakCardDAO createCard(List<MultipartFile> files);
+    /**
+     * Creates a new MAC card using the provided files.
+     *
+     * @param files a list of multipart files to be used in the creation of the MAC card
+     */
+    void createCard(List<MultipartFile> files);
 }

@@ -13,7 +13,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @Table(name = "tokens")
-public class TokenDAO {
+public class Token {
     @Id
     @GeneratedValue(generator = "UUID")
     @Column(name = "token_id", updatable = false, nullable = false)
@@ -30,7 +30,7 @@ public class TokenDAO {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", updatable = false)
-    UserDAO user;
+    User user;
 
     @Column(name = "updated_timestamp")
     private Instant updatedTimestamp;

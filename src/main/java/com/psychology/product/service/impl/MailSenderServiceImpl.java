@@ -1,6 +1,6 @@
 package com.psychology.product.service.impl;
 
-import com.psychology.product.repository.model.UserDAO;
+import com.psychology.product.repository.model.User;
 import com.psychology.product.service.MailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -22,7 +22,6 @@ public class MailSenderServiceImpl implements MailService {
     private final JavaMailSender javaMailSender;
     private final TemplateEngine templateEngine;
 
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     public MailSenderServiceImpl(JavaMailSender javaMailSender, TemplateEngine templateEngine) {
         this.javaMailSender = javaMailSender;
         this.templateEngine = templateEngine;
@@ -42,7 +41,7 @@ public class MailSenderServiceImpl implements MailService {
     }
 
     @Override
-    public void sendRegistrationMail(UserDAO user) throws MessagingException {
+    public void sendRegistrationMail(User user) throws MessagingException {
         Context context = new Context();
         context.setVariable("username", user.getFirstName());
         context.setVariable("host", frontendHost);
@@ -51,7 +50,7 @@ public class MailSenderServiceImpl implements MailService {
     }
 
     @Override
-    public void sendResetPasswordMail(UserDAO user) throws MessagingException {
+    public void sendResetPasswordMail(User user) throws MessagingException {
         Context context = new Context();
         context.setVariable("username", user.getFirstName());
         context.setVariable("host", frontendHost);

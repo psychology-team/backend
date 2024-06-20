@@ -1,7 +1,7 @@
 package com.psychology.product.config;
 
 import com.psychology.product.repository.TokenRepository;
-import com.psychology.product.repository.model.TokenDAO;
+import com.psychology.product.repository.model.Token;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,7 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         token = authHeader.substring(7);
 
-        TokenDAO tokenDAO = tokenRepository.findByToken(token);
+        Token tokenDAO = tokenRepository.findByToken(token);
 
         Optional.ofNullable(tokenDAO).ifPresent(tokenDAOPresent -> {
             if (tokenDAOPresent.isExpired() || tokenDAOPresent.isRevoked()) {

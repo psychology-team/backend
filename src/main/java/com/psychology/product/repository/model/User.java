@@ -18,7 +18,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @Table(name = "users")
-public class UserDAO implements Serializable {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -61,6 +61,6 @@ public class UserDAO implements Serializable {
 
     @Transient
     @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL)
-    private List<DiagnosticResultDAO> diagnosticResultDAOList;
+    private List<DiagnosticResult> diagnosticResultList;
 
 }

@@ -3,7 +3,7 @@ package com.psychology.product.service.impl;
 import com.psychology.product.repository.TokenRepository;
 import com.psychology.product.repository.dto.TokenDTO;
 import com.psychology.product.repository.dto.UserDTO;
-import com.psychology.product.repository.model.TokenDAO;
+import com.psychology.product.repository.model.Token;
 import com.psychology.product.service.JwtUtils;
 import com.psychology.product.service.TokenService;
 import com.psychology.product.service.UserService;
@@ -58,18 +58,18 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public void deactivateToken(TokenDAO tokenDAO) {
-        tokenDAO.setRevoked(true);
-        tokenDAO.setExpired(true);
-        tokenDAO.setUpdatedTimestamp(Instant.now());
-        tokenRepository.save(tokenDAO);
+    public void deactivateToken(Token token) {
+        token.setRevoked(true);
+        token.setExpired(true);
+        token.setUpdatedTimestamp(Instant.now());
+        tokenRepository.save(token);
     }
 
     @Override
     public void deactivateAccessAndSaveRefresh(Authentication authentication, String refreshToken) {
         UserDTO user = userService.getUserFromEmail(authentication.getName());
 
-        List<TokenDAO> tokensList = tokenRepository.findAllByUser_Id(user.id());
+        List<Token> tokensList = tokenRepository.findAllByUser_Id(user.id());
         tokensList.forEach(token -> {
             if (!token.getToken().equals(refreshToken)) {
                 deactivateToken(token);
@@ -79,7 +79,7 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public void deactivatePreviousTokens(UserDTO user) {
-        List<TokenDAO> tokensList = tokenRepository.findAllByUser_Id(user.id());
+        List<Token> tokensList = tokenRepository.findAllByUser_Id(user.id());
         tokensList.forEach(this::deactivateToken);
         tokenRepository.saveAll(tokensList);
     }

@@ -17,7 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "images")
-public class ImageDAO {
+public class Image {
     @Id
     @GeneratedValue(generator = "UUID")
     @Column(name = "image_id", updatable = false, nullable = false)

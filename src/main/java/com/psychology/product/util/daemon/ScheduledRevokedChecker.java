@@ -1,7 +1,7 @@
 package com.psychology.product.util.daemon;
 
 import com.psychology.product.repository.UserRepository;
-import com.psychology.product.repository.model.UserDAO;
+import com.psychology.product.repository.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -23,7 +23,7 @@ public class ScheduledRevokedChecker {
         getExpirationUsers().ifPresent(userRepository::deleteAll);
     }
 
-    private Optional<List<UserDAO>> getExpirationUsers() {
+    private Optional<List<User>> getExpirationUsers() {
         Instant thresholdTime = Instant.now().minusMillis(expirationTime);
         return userRepository.findAllByRevokedTimestampLessThanEqual(thresholdTime);
 

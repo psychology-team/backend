@@ -12,21 +12,22 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "answers")
+@Table(name = "diagnostic_results")
 
-public class AnswerDAO implements Serializable {
+public class DiagnosticResult implements Serializable {
 
     @Id
     @GeneratedValue(generator = "UUID")
-    @Column(name = "answer_id", updatable = false, nullable = false)
-    private UUID answerId;
-
-    @Column(name = "answer_text")
-    private String answerText;
+    @Column(name = "diagnostic_result_id", updatable = false, nullable = false)
+    private UUID userDiagnosticResultId;
 
     @ManyToOne
-    @JoinColumn(name = "question_id")
-    private QuestionDAO questionDAO;
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @OneToOne
+    @JoinColumn(name = "diagnostic_id")
+    private Diagnostic diagnostic;
 
     @Column(name = "scale_points")
     private short scalePoints;

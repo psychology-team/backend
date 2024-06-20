@@ -3,7 +3,7 @@ package com.psychology.product.service.impl;
 import com.psychology.product.controller.request.LoginRequest;
 import com.psychology.product.controller.response.JwtResponse;
 import com.psychology.product.repository.dto.UserDTO;
-import com.psychology.product.repository.model.UserDAO;
+import com.psychology.product.repository.model.User;
 import com.psychology.product.service.AuthService;
 import com.psychology.product.service.JwtUtils;
 import com.psychology.product.service.TokenService;
@@ -73,7 +73,7 @@ public class AuthServiceImpl implements AuthService {
         }
         Claims claims = jwtUtils.getRefreshClaims(refreshToken);
         String login = claims.getSubject();
-        UserDAO user = new UserDAO();
+        User user = new User();
         user.setEmail(login);
         Authentication authentication = userService.userAuthentication(user);
         if (authentication == null) {
