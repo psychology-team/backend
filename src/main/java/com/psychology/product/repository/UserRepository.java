@@ -1,6 +1,6 @@
 package com.psychology.product.repository;
 
-import com.psychology.product.repository.model.UserDAO;
+import com.psychology.product.repository.model.User;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface UserRepository extends JpaRepository<UserDAO, UUID> {
-    Optional<UserDAO> findByEmail(String email);
-    @NotNull Optional<UserDAO> findById(@NotNull UUID uuid);
-    Optional<List<UserDAO>> findAllByRevokedTimestampLessThanEqual(Instant revokedTime);
-    Optional<UserDAO> findByUniqueCode(String uniqueCode);
+public interface UserRepository extends JpaRepository<User, UUID> {
+    Optional<User> findByEmail(String email);
+    @NotNull Optional<User> findById(@NotNull UUID uuid);
+    Optional<List<User>> findAllByRevokedTimestampLessThanEqual(Instant revokedTime);
+    Optional<User> findByUniqueCode(String uniqueCode);
 }

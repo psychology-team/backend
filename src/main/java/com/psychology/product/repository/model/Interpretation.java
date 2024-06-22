@@ -11,16 +11,16 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "scales")
+@Table(name = "interpretations")
 
-public class ScaleDAO {
+public class Interpretation {
 
     @Id
     @GeneratedValue(generator = "UUID")
-    @Column(name = "scale_id", updatable = false, nullable = false)
+    @Column(name = "interpretation_id", updatable = false, nullable = false)
     private UUID id;
 
-    @Column(name = "scale_name")
-    private String scaleName;
+    @Column(name = "interpretation_text")
+    private String interpretationText;
 
 }

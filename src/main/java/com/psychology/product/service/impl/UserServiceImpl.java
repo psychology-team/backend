@@ -4,8 +4,8 @@ import com.psychology.product.controller.request.ForgotPasswordRequest;
 import com.psychology.product.controller.request.SignUpRequest;
 import com.psychology.product.repository.UserRepository;
 import com.psychology.product.repository.dto.UserDTO;
+import com.psychology.product.repository.model.User;
 import com.psychology.product.repository.model.UserAuthority;
-import com.psychology.product.repository.model.UserDAO;
 import com.psychology.product.service.JwtUtils;
 import com.psychology.product.service.MailService;
 import com.psychology.product.service.UserService;
@@ -44,14 +44,14 @@ public class UserServiceImpl implements UserService {
     public UserDTO getCurrentUser() {
         String tokenFromRequest = getTokenFromRequest();
         String emailFromRequest = jwtUtils.getEmailFromJwtToken(tokenFromRequest);
-        UserDAO userDAO = findUserByEmail(emailFromRequest);
-        return userMapper.toDTO(userDAO);
+        User user = findUserByEmail(emailFromRequest);
+        return userMapper.toDTO(user);
     }
 
     @Override
     public UserDTO getUserFromEmail(String email) {
-        UserDAO userDAO = findUserByEmail(email);
-        return userMapper.toDTO(userDAO);
+        User user = findUserByEmail(email);
+        return userMapper.toDTO(user);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
         boolean isEmailAlreadyUsed = userRepository.findByEmail(email).isPresent();
         if (isEmailAlreadyUsed) throw new ConflictException("The email is already in use");
 
-        UserDAO user = new UserDAO();
+        User user = new User();
         user.setFirstName(signUpRequest.firstName());
         user.setLastName((signUpRequest.lastName()));
         user.setEmail((signUpRequest.email()));
@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO updateUser(UserDTO updated) {
         String tokenFromRequest = getTokenFromRequest();
         String emailFromRequest = jwtUtils.getEmailFromJwtToken(tokenFromRequest);
-        UserDAO current = findUserByEmail(emailFromRequest);
+        User current = findUserByEmail(emailFromRequest);
         Optional.ofNullable(updated.firstName()).ifPresent(current::setFirstName);
         Optional.ofNullable(updated.lastName()).ifPresent(current::setLastName);
         Optional.ofNullable(updated.phone()).ifPresent(current::setPhone);
@@ -94,7 +94,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDTO> findAllUsers() {
-        List<UserDAO> users = userRepository.findAll();
+        List<User> users = userRepository.findAll();
         return users.stream()
                 .map(userMapper::toDTO)
                 .toList();
@@ -104,7 +104,7 @@ public class UserServiceImpl implements UserService {
     public void disableUser() {
         String tokenFromRequest = getTokenFromRequest();
         String emailFromRequest = jwtUtils.getEmailFromJwtToken(tokenFromRequest);
-        UserDAO user = findUserByEmail(emailFromRequest);
+        User user = findUserByEmail(emailFromRequest);
         if (user.getRevoked()) return;
         user.setRevoked(true);
         user.setRevokedTimestamp(Instant.now());
@@ -113,19 +113,19 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserDAO findUserByEmail(String email) {
+    public User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User not found."));
     }
 
-    public Authentication userAuthentication(UserDAO user) {
+    public Authentication userAuthentication(User user) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
     @Override
     public void activateUser(String uniqueCode) {
-        UserDAO user = userRepository.findByUniqueCode(uniqueCode)
+        User user = userRepository.findByUniqueCode(uniqueCode)
                 .orElseThrow(() -> new NotFoundException("Invalid code"));
         user.setEnabled(true);
         user.setUniqueCode(null);
@@ -134,7 +134,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void forgotPassword(ForgotPasswordRequest request) {
-        UserDAO user = userRepository.findByEmail(request.email())
+        User user = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> new NotFoundException("User not found"));
         user.setUniqueCode(String.valueOf(new Random().nextInt(999999)));
         userRepository.save(user);

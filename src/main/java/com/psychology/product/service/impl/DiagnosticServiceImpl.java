@@ -35,19 +35,19 @@ public class DiagnosticServiceImpl implements DiagnosticService {
 
     @Override
     public List<DiagnosticDTO> getAllDiagnostics() {
-        List<DiagnosticDAO> diagnosticDAOList = diagnosticRepository.findAll();
-        return diagnosticMapper.toDTO(diagnosticDAOList);
+        List<Diagnostic> diagnosticList = diagnosticRepository.findAll();
+        return diagnosticMapper.toDTO(diagnosticList);
     }
 
     public DiagnosticDTO getDiagnosticById(UUID id) {
-        DiagnosticDAO diagnosticDAO = diagnosticRepository.findById(id)
+        Diagnostic diagnostic = diagnosticRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Diagnostic not found"));
-        return diagnosticMapper.toDTO(diagnosticDAO);
+        return diagnosticMapper.toDTO(diagnostic);
     }
 
     @Override
     public DiagnosticDTO addDiagnostic(DiagnosticDTO diagnosticRequest) {
-        DiagnosticDAO diagnostic = new DiagnosticDAO();
+        Diagnostic diagnostic = new Diagnostic();
         diagnostic.setDiagnosticName(diagnosticRequest.diagnosticName());
         diagnostic.setDiagnosticDescription(diagnosticRequest.diagnosticDescription());
 
@@ -57,7 +57,7 @@ public class DiagnosticServiceImpl implements DiagnosticService {
 
     @Override
     public DiagnosticDTO modifyDiagnostic(UUID id, DiagnosticDTO diagnosticRequest) {
-        DiagnosticDAO diagnostic = diagnosticRepository.findById(id)
+        Diagnostic diagnostic = diagnosticRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Diagnostic not found"));
         diagnostic.setDiagnosticName(diagnosticRequest.diagnosticName());
         diagnostic.setDiagnosticDescription(diagnosticRequest.diagnosticDescription());
@@ -68,10 +68,10 @@ public class DiagnosticServiceImpl implements DiagnosticService {
 
     @Override
     public AnswerDTO addAnswer(AnswerDTO answerRequest) {
-        QuestionDAO question = questionRepository.findById(answerRequest.questionId())
+        Question question = questionRepository.findById(answerRequest.questionId())
                 .orElseThrow(() -> new NotFoundException("Question not found"));
-        AnswerDAO answer = new AnswerDAO();
-        answer.setQuestionDAO(question);
+        Answer answer = new Answer();
+        answer.setQuestion(question);
         answer.setAnswerText(answerRequest.answerText());
         answer.setScalePoints(answerRequest.scalePoints());
         answer.setInterpretationPoints(answerRequest.interpretationPoints());
@@ -82,23 +82,23 @@ public class DiagnosticServiceImpl implements DiagnosticService {
 
     @Override
     public DiagnosticDTO modifyAnswer(UUID id, AnswerDTO answerRequest) {
-        AnswerDAO answer = answerRepository.findById(id)
+        Answer answer = answerRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Answer not found"));
         answer.setAnswerText(answerRequest.answerText());
         answer.setInterpretationPoints(answerRequest.interpretationPoints());
         answer.setScalePoints(answerRequest.scalePoints());
 
         answerRepository.save(answer);
-        return diagnosticMapper.toDTO(answer.getQuestionDAO().getDiagnosticDAO());
+        return diagnosticMapper.toDTO(answer.getQuestion().getDiagnostic());
     }
 
     @Override
     public QuestionDTO addQuestion(QuestionDTO questionRequest) {
-        DiagnosticDAO diagnostic = diagnosticRepository.findById(questionRequest.diagnosticId())
+        Diagnostic diagnostic = diagnosticRepository.findById(questionRequest.diagnosticId())
                 .orElseThrow(() -> new NotFoundException("Diagnostic not found"));
 
-        QuestionDAO question = new QuestionDAO();
-        question.setDiagnosticDAO(diagnostic);
+        Question question = new Question();
+        question.setDiagnostic(diagnostic);
         question.setQuestionText(questionRequest.questionText());
         questionRepository.save(question);
 
@@ -107,65 +107,65 @@ public class DiagnosticServiceImpl implements DiagnosticService {
 
     @Override
     public DiagnosticDTO modifyQuestion(UUID id, QuestionDTO questionRequest) {
-        QuestionDAO question = questionRepository.findById(id)
+        Question question = questionRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Question not found"));
         question.setQuestionText(questionRequest.questionText());
 
         questionRepository.save(question);
-        return diagnosticMapper.toDTO(question.getDiagnosticDAO());
+        return diagnosticMapper.toDTO(question.getDiagnostic());
     }
 
     @Override
     public void deleteDiagnostic(UUID id) {
-        DiagnosticDAO diagnosticDAO = diagnosticRepository.findById(id)
+        Diagnostic diagnostic = diagnosticRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Diagnostic not found"));
-        diagnosticRepository.delete(diagnosticDAO);
+        diagnosticRepository.delete(diagnostic);
     }
 
     @Override
     public void deleteQuestion(UUID id) {
-        QuestionDAO questionDAO = questionRepository.findById(id)
+        Question question = questionRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Question not found"));
-        questionRepository.delete(questionDAO);
+        questionRepository.delete(question);
     }
 
     @Override
     public void deleteAnswer(UUID id) {
-        AnswerDAO answerDAO = answerRepository.findById(id)
+        Answer answer = answerRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Answer not found"));
-        answerRepository.delete(answerDAO);
+        answerRepository.delete(answer);
     }
 
     @Override
     public DiagnosticResultDTO passedDiagnosticResult(DiagnosticResultDTO diagnosticResultRequest) {
-        Optional.ofNullable(diagnosticResultRepository.findByUserDAO_IdAndDiagnosticDAO_DiagnosticId(diagnosticResultRequest.userId(), diagnosticResultRequest.diagnosticId()))
+        Optional.ofNullable(diagnosticResultRepository.findByUser_IdAndDiagnostic_DiagnosticId(diagnosticResultRequest.userId(), diagnosticResultRequest.diagnosticId()))
                 .ifPresent(diagnosticResultDAO -> {
                     throw new ConflictException("Result for this diagnostic already exist");
                 });
 
-        DiagnosticDAO diagnosticDAO = diagnosticRepository.findById(diagnosticResultRequest.diagnosticId())
+        Diagnostic diagnostic = diagnosticRepository.findById(diagnosticResultRequest.diagnosticId())
                 .orElseThrow(() -> new NotFoundException("Diagnostic not found"));
         UserDTO userDTO = userService.getCurrentUser();
 
         if (!userDTO.id().equals(diagnosticResultRequest.userId()))
             throw new ConflictException("You don't have permission for add result for another user");
 
-        UserDAO user = userMapper.toDAO(userDTO);
+        User user = userMapper.toDAO(userDTO);
 
-        DiagnosticResultDAO diagnosticResultDAO = new DiagnosticResultDAO();
-        diagnosticResultDAO.setDiagnosticDAO(diagnosticDAO);
-        diagnosticResultDAO.setUserDAO(user);
-        diagnosticResultDAO.setScalePoints(diagnosticResultRequest.scalePoints());
-        diagnosticResultDAO.setInterpretationPoints(diagnosticResultRequest.interpretationPoints());
+        DiagnosticResult diagnosticResult = new DiagnosticResult();
+        diagnosticResult.setDiagnostic(diagnostic);
+        diagnosticResult.setUser(user);
+        diagnosticResult.setScalePoints(diagnosticResultRequest.scalePoints());
+        diagnosticResult.setInterpretationPoints(diagnosticResultRequest.interpretationPoints());
 
-        diagnosticResultRepository.save(diagnosticResultDAO);
-        return diagnosticResultMapper.toDTO(diagnosticResultDAO);
+        diagnosticResultRepository.save(diagnosticResult);
+        return diagnosticResultMapper.toDTO(diagnosticResult);
     }
 
     @Override
     public List<DiagnosticResultDTO> getDiagnosticResultForCurrentUser() {
         UserDTO userDTO = userService.getCurrentUser();
-        List<DiagnosticResultDAO> diagnosticResultDAOList = diagnosticResultRepository.getAllByUserDAO_Id(userDTO.id());
-        return diagnosticResultMapper.toDTO(diagnosticResultDAOList);
+        List<DiagnosticResult> diagnosticResultList = diagnosticResultRepository.getAllByUserId(userDTO.id());
+        return diagnosticResultMapper.toDTO(diagnosticResultList);
     }
 }

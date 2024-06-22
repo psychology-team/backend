@@ -19,7 +19,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Table(name = "questions")
 @JsonView(JsonViews.Question.class)
-public class QuestionDAO implements Serializable {
+public class Question implements Serializable {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -28,12 +28,12 @@ public class QuestionDAO implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "diagnostic_id")
-    private DiagnosticDAO diagnosticDAO;
+    private Diagnostic diagnostic;
 
     @Column(name = "question_text")
     private String questionText;
 
-    @OneToMany(mappedBy = "questionDAO", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<AnswerDAO> answersList;
+    @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Answer> answersList;
 
 }

@@ -1,7 +1,7 @@
 package com.psychology.product.service.mapper;
 
 import com.psychology.product.repository.dto.DiagnosticResultDTO;
-import com.psychology.product.repository.model.DiagnosticResultDAO;
+import com.psychology.product.repository.model.DiagnosticResult;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.UUID;
 public class DiagnosticResultMapperImpl implements DiagnosticResultMapper {
 
     @Override
-    public DiagnosticResultDTO toDTO(DiagnosticResultDAO result) {
+    public DiagnosticResultDTO toDTO(DiagnosticResult result) {
         if ( result == null ) {
             return null;
         }
@@ -20,21 +20,21 @@ public class DiagnosticResultMapperImpl implements DiagnosticResultMapper {
         short interpretationPoints = result.getInterpretationPoints();
         short scalePoints = result.getScalePoints();
 
-        UUID userId = result.getUserDAO().getId();
-        UUID diagnosticId = result.getDiagnosticDAO().getDiagnosticId();
+        UUID userId = result.getUser().getId();
+        UUID diagnosticId = result.getDiagnostic().getDiagnosticId();
 
         return new DiagnosticResultDTO( userId, diagnosticId, interpretationPoints, scalePoints );
     }
 
     @Override
-    public List<DiagnosticResultDTO> toDTO(List<DiagnosticResultDAO> results) {
+    public List<DiagnosticResultDTO> toDTO(List<DiagnosticResult> results) {
         if ( results == null ) {
             return null;
         }
 
         List<DiagnosticResultDTO> list = new ArrayList<>(results.size());
-        for ( DiagnosticResultDAO diagnosticResultDAO : results ) {
-            list.add( toDTO( diagnosticResultDAO ) );
+        for ( DiagnosticResult diagnosticResult : results ) {
+            list.add( toDTO(diagnosticResult) );
         }
 
         return list;

@@ -17,7 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Table(name = "diagnostics")
 
-public class DiagnosticDAO implements Serializable {
+public class Diagnostic implements Serializable {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -30,7 +30,7 @@ public class DiagnosticDAO implements Serializable {
     @Column(name = "diagnostic_description")
     private String diagnosticDescription;
 
-    @OneToMany(mappedBy = "diagnosticDAO", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<QuestionDAO> questionsList;
+    @OneToMany(mappedBy = "diagnostic", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Question> questionsList;
 
 }

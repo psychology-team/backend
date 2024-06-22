@@ -2,7 +2,7 @@ package com.psychology.product.service.impl;
 
 import com.psychology.product.repository.AdminRepository;
 import com.psychology.product.repository.dto.UserDTO;
-import com.psychology.product.repository.model.UserDAO;
+import com.psychology.product.repository.model.User;
 import com.psychology.product.service.AdminService;
 import com.psychology.product.service.mapper.UserMapper;
 import com.psychology.product.service.UserService;
@@ -24,30 +24,30 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public UserDTO getCurrentClient(UUID clientId) {
-        Optional<UserDAO> userOptional = adminRepository.findById(clientId);
+        Optional<User> userOptional = adminRepository.findById(clientId);
         if (userOptional.isPresent()) {
-            UserDAO userDAO = userOptional.get();
-            return userMapper.toDTO(userDAO);
+            User user = userOptional.get();
+            return userMapper.toDTO(user);
         }
         throw new NotFoundException("User not found");
     }
 
     @Override
     public void disableClient(UUID clientId) {
-        Optional<UserDAO> userOptional = adminRepository.findById(clientId);
+        Optional<User> userOptional = adminRepository.findById(clientId);
         if (userOptional.isPresent()) {
-            UserDAO userDAO = adminRepository.getReferenceById(clientId);
-            if (userDAO.getRevoked()) {
+            User user = adminRepository.getReferenceById(clientId);
+            if (user.getRevoked()) {
                 throw new ConflictException("Client was disabled");
             }
-            userDAO.setRevoked(true);
-            adminRepository.save(userDAO);
+            user.setRevoked(true);
+            adminRepository.save(user);
         }
     }
 
     @Override
     public void deleteClient(UUID clientId) {
-        Optional<UserDAO> userOptional = adminRepository.findById(clientId);
+        Optional<User> userOptional = adminRepository.findById(clientId);
         if (userOptional.isPresent()) {
             adminRepository.deleteById(clientId);
         } else {

@@ -13,7 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "mak_cards")
-public class MakCardDAO {
+public class MakCard {
     @Id
     @GeneratedValue(generator = "UUID")
     @Column(name = "mak_card_id", updatable = false, nullable = false)
@@ -27,7 +27,7 @@ public class MakCardDAO {
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "image_id", referencedColumnName = "image_id")
-    private ImageDAO previewImage;
+    private Image previewImage;
 
     @ManyToMany
     @JoinTable(
@@ -35,9 +35,9 @@ public class MakCardDAO {
             joinColumns = @JoinColumn(name = "mac_card_id"),
             inverseJoinColumns = @JoinColumn(name = "image_id")
     )
-    private List<ImageDAO> images;
+    private List<Image> images;
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
-    private UserDAO user;
+    private User user;
 }

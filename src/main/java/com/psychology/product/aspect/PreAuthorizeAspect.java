@@ -1,7 +1,7 @@
 package com.psychology.product.aspect;
 
 import com.psychology.product.repository.UserRepository;
-import com.psychology.product.repository.model.UserDAO;
+import com.psychology.product.repository.model.User;
 import com.psychology.product.service.JwtUtils;
 import jakarta.security.auth.message.AuthException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,8 +36,8 @@ public class PreAuthorizeAspect {
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String token = authorizationHeader.substring(7);
             String email = jwtUtils.getEmailFromJwtToken(token);
-            UserDAO userDAO = userRepository.findByEmail(email).orElseThrow(() -> new AuthException("Unauthorized"));
-            if (userDAO.getRevoked())
+            User user = userRepository.findByEmail(email).orElseThrow(() -> new AuthException("Unauthorized"));
+            if (user.getRevoked())
                 throw new AuthException("Unauthorized");
             return email;
 

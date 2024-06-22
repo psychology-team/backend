@@ -1,21 +1,20 @@
 package com.psychology.product.service.mapper;
 
 import com.psychology.product.repository.dto.MakCardDTO;
-import com.psychology.product.repository.model.ImageDAO;
-import com.psychology.product.repository.model.MakCardDAO;
+import com.psychology.product.repository.model.Image;
+import com.psychology.product.repository.model.MakCard;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface MakCardMapper {
-    MakCardDTO toDTO(MakCardDAO makCardDAO);
+    MakCardDTO toDTO(MakCard makCard);
 
-    default List<String> map(List<ImageDAO> value) {
+    default List<String> map(List<Image> value) {
         return value.stream()
-                .map(ImageDAO::getName)
+                .map(Image::getName)
                 .collect(Collectors.toList());
     }
 }
