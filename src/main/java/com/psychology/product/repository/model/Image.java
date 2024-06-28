@@ -18,6 +18,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Table(name = "images")
 public class Image {
+
     @Id
     @GeneratedValue(generator = "UUID")
     @Column(name = "image_id", updatable = false, nullable = false)
@@ -28,10 +29,9 @@ public class Image {
     private Long size;
     @Column(name = "content_type")
     private String contentType;
-    @Lob
-    @JdbcTypeCode(Types.BINARY)
-    @Column(name = "content")
-    private byte[] content;
+    @Column(name = "content",length = 3000)
+    private String content;
     @Column(name = "created_timestamp")
     private Instant createdTimestamp;
+
 }

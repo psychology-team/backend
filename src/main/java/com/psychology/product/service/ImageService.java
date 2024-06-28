@@ -1,15 +1,14 @@
 package com.psychology.product.service;
 
 import com.psychology.product.repository.model.Image;
-import org.springframework.web.multipart.MultipartFile;
 
 public interface ImageService {
     /**
-     * Creates an Image entity from a multipart file.
+     * Creates an Image entity from a link.
      *
-     * @param multipartFile The MultipartFile representing the image file.
+     * @param imageLink The String representing the image link.
      * @return The created Image entity.
      */
-    Image createImage(MultipartFile multipartFile);
+    Image createImage(String imageLink);
 
 }

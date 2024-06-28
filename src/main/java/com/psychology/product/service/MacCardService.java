@@ -10,5 +10,5 @@ public interface MacCardService {
      *
      * @param files a list of multipart files to be used in the creation of the MAC card
      */
-    void createCard(List<MultipartFile> files);
+    void createCard(List<String> imageLinks);
 }
