@@ -33,10 +33,9 @@ public class MacCardServiceImpl implements MacCardService {
         MakCard card = new MakCard();
         card.setUser(userDAO);
         List<Image> images = new ArrayList<>();
-//        for (MultipartFile file : files) {
-            //todo change methods parameter
-//            images.add(imageService.createImage(file));
-//        }
+        for (String links : imageLinks) {
+            images.add(imageService.createImage(links));
+        }
         card.setImages(images);
         card.setPreviewImage(images.get(0));
         macCardRepository.save(card);
