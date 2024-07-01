@@ -1,0 +1,2 @@
+ALTER TABLE images
+    ALTER COLUMN content TYPE VARCHAR(3000);

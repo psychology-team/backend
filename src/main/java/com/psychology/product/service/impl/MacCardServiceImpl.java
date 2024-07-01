@@ -27,14 +27,14 @@ public class MacCardServiceImpl implements MacCardService {
     private final UserMapper userMapper;
 
     @Override
-    public void createCard(List<MultipartFile> files) {
+    public void createCard(List<String> imageLinks) {
         UserDTO user = userService.getCurrentUser();
         User userDAO = userMapper.toDAO(user);
         MakCard card = new MakCard();
         card.setUser(userDAO);
         List<Image> images = new ArrayList<>();
-        for (MultipartFile file : files) {
-            images.add(imageService.createImage(file));
+        for (String links : imageLinks) {
+            images.add(imageService.createImage(links));
         }
         card.setImages(images);
         card.setPreviewImage(images.get(0));
