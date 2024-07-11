@@ -1,6 +1,7 @@
 package com.psychology.product.controller;
 
 import com.psychology.product.aspect.ExcludeAspect;
+import com.psychology.product.constant.ApiKey;
 import com.psychology.product.controller.request.ActivateRequest;
 import com.psychology.product.controller.request.LoginRequest;
 import com.psychology.product.controller.request.SignUpRequest;
@@ -24,7 +25,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping(ApiKey.AUTH)
 @Slf4j
 @AllArgsConstructor
 @Tag(name = "Authentication Controller", description = "Endpoints for authentication business logic")
@@ -34,7 +35,7 @@ public class AuthController {
     private final UserService userService;
     private final AuthService authService;
 
-    @PostMapping("/signup")
+    @PostMapping(ApiKey.AUTH_SIGNUP)
     @ExcludeAspect
     @Operation(summary = "Register new user")
     @ApiResponses(value = {
@@ -47,7 +48,7 @@ public class AuthController {
         return ResponseUtil.generateResponse("Created", HttpStatus.CREATED);
     }
 
-    @PostMapping("/login")
+    @PostMapping(ApiKey.AUTH_LOGIN)
     @ExcludeAspect
     @Operation(summary = "User authentication and token issuance")
     @ApiResponses(value = {
@@ -61,7 +62,7 @@ public class AuthController {
         return ResponseUtil.generateResponse("Successfully Authenticated", HttpStatus.OK, jwtResponse);
     }
 
-    @PostMapping("/refresh/access-token")
+    @PostMapping(ApiKey.AUTH_REFRESH_ACCESS_TOKEN)
     @Operation(summary = "Refresh jwt access token")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
@@ -74,7 +75,7 @@ public class AuthController {
         return ResponseUtil.generateResponse("Access token", HttpStatus.OK, token);
     }
 
-    @PostMapping("/refresh/refresh-token")
+    @PostMapping(ApiKey.AUTH_REFRESH_REFRESH_TOKEN)
     @Operation(summary = "Refresh jwt refresh token")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
@@ -87,7 +88,7 @@ public class AuthController {
         return ResponseUtil.generateResponse("Tokens", HttpStatus.OK, tokens);
     }
 
-    @PostMapping("/activate/{code}")
+    @PostMapping(ApiKey.AUTH_ACTIVE_CODE)
     @ExcludeAspect
     @Operation(summary = "Activate user with activation code")
     @ApiResponses({
@@ -103,7 +104,7 @@ public class AuthController {
         return ResponseUtil.generateResponse("User activated successfully!", HttpStatus.OK);
     }
 
-    @PostMapping("/logout")
+    @PostMapping(ApiKey.AUTH_LOGOUT)
     @Operation(summary = "Logout")
     @ApiResponses({
             @ApiResponse(responseCode = "200"),

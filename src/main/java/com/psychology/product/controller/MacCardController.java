@@ -1,5 +1,6 @@
 package com.psychology.product.controller;
 
+import com.psychology.product.constant.ApiKey;
 import com.psychology.product.service.MacCardService;
 import com.psychology.product.util.ResponseUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,7 +20,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/card")
+@RequestMapping(ApiKey.CARD)
 @Slf4j
 @Tag(name = "Card Controller", description = "Endpoints works with associative cards")
 @CrossOrigin(origins = "*")

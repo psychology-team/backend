@@ -18,14 +18,14 @@ public class ApiKey {
     public static final String CARD = BASE_URL + "card";
 
     public static final String DIAGNOSTIC = BASE_URL + "diagnostic";
-    public static final String DIAGNOSTIC_GET_ALL = "/get/all";
+    public static final String DIAGNOSTIC_GET_ALL = "/get-all";
     public static final String DIAGNOSTIC_ID = "/{id}";
     public static final String DIAGNOSTIC_NEW = "/new";
     public static final String DIAGNOSTIC_QUESTION_NEW = "/question/new";
     public static final String DIAGNOSTIC_ANSWER_NEW = "/answer/new";
     public static final String DIAGNOSTIC_QUESTION_ID = "/question/{id}";
     public static final String DIAGNOSTIC_ANSWER_ID = "/answer/{id}";
-    public static final String DIAGNOSTIC_RESULT = "/result/";
+    public static final String DIAGNOSTIC_RESULT = "/result";
 
     public static final String AUTH = BASE_URL + "auth";
     public static final String AUTH_SIGNUP = "/signup";

@@ -1,6 +1,7 @@
 package com.psychology.product.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.psychology.product.constant.ApiKey;
 import com.psychology.product.repository.dto.AnswerDTO;
 import com.psychology.product.repository.dto.DiagnosticDTO;
 import com.psychology.product.repository.dto.DiagnosticResultDTO;
@@ -29,7 +30,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/diagnostic")
+@RequestMapping(ApiKey.DIAGNOSTIC)
 @Slf4j
 @AllArgsConstructor
 @Tag(name = "Diagnostic Controller", description = "Endpoints works with diagnostics")
@@ -37,7 +38,7 @@ import java.util.UUID;
 public class DiagnosticController {
     private final DiagnosticService diagnosticService;
 
-    @GetMapping("/get-all")
+    @GetMapping(ApiKey.DIAGNOSTIC_GET_ALL)
     @JsonView(JsonViews.UserView.class)
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @SecurityRequirement(name = "Bearer Authentication")
@@ -51,7 +52,7 @@ public class DiagnosticController {
         return ResponseUtil.generateResponse("Successfully return diagnostics", HttpStatus.OK, diagnostic);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(ApiKey.DIAGNOSTIC_ID)
     @JsonView(JsonViews.UserView.class)
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @SecurityRequirement(name = "Bearer Authentication")
@@ -66,7 +67,7 @@ public class DiagnosticController {
         return ResponseUtil.generateResponse("Diagnostic", HttpStatus.OK, diagnostic);
     }
 
-    @PostMapping("/new")
+    @PostMapping(ApiKey.DIAGNOSTIC_NEW)
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Add new diagnostic")
     @ApiResponses(value = {
@@ -79,7 +80,7 @@ public class DiagnosticController {
         return ResponseUtil.generateResponse("Diagnostic was successfully added", HttpStatus.OK, diagnostic);
     }
 
-    @PostMapping("/question/new")
+    @PostMapping(ApiKey.DIAGNOSTIC_QUESTION_NEW)
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Add new question")
     @ApiResponses(value = {
@@ -92,7 +93,7 @@ public class DiagnosticController {
         return ResponseUtil.generateResponse("Question was successfully added", HttpStatus.OK, question);
     }
 
-    @PostMapping("/answer/new")
+    @PostMapping(ApiKey.DIAGNOSTIC_ANSWER_NEW)
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Add new answer")
     @ApiResponses(value = {
@@ -105,7 +106,7 @@ public class DiagnosticController {
         return ResponseUtil.generateResponse("Answer was successfully added", HttpStatus.OK, answer);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(ApiKey.DIAGNOSTIC_ID)
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Modify diagnostic by id")
     @ApiResponses(value = {
@@ -127,7 +128,7 @@ public class DiagnosticController {
         return ResponseUtil.generateResponse("Diagnostic successfully modified", HttpStatus.OK, diagnostic);
     }
 
-    @PutMapping("/question/{id}")
+    @PutMapping(ApiKey.DIAGNOSTIC_QUESTION_ID)
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Modify question by id")
     @ApiResponses(value = {
@@ -149,7 +150,7 @@ public class DiagnosticController {
         return ResponseUtil.generateResponse("Question successfully modified", HttpStatus.OK, diagnostic);
     }
 
-    @PostMapping("/result/")
+    @PostMapping(ApiKey.DIAGNOSTIC_RESULT)
     @JsonView(JsonViews.UserView.class)
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @Operation(summary = "Add diagnostic result")
@@ -175,7 +176,7 @@ public class DiagnosticController {
         return ResponseUtil.generateResponse("Diagnostic result successfully added", HttpStatus.OK, diagnosticResult);
     }
 
-    @GetMapping("/result/")
+    @GetMapping(ApiKey.DIAGNOSTIC_RESULT)
     @JsonView(JsonViews.UserView.class)
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @Operation(summary = "Get diagnostic results for current user")
@@ -193,7 +194,7 @@ public class DiagnosticController {
     }
 
 
-    @PutMapping("/answer/{id}")
+    @PutMapping(ApiKey.DIAGNOSTIC_ANSWER_ID)
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Modify answer by id")
     @ApiResponses(value = {
@@ -217,7 +218,7 @@ public class DiagnosticController {
         return ResponseUtil.generateResponse("Answer successfully modified", HttpStatus.OK, diagnostic);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(ApiKey.DIAGNOSTIC_ID)
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Delete diagnostic by id")
     @ApiResponses(value = {
@@ -230,7 +231,7 @@ public class DiagnosticController {
         return ResponseUtil.generateResponse("Diagnostic successfully deleted", HttpStatus.OK);
     }
 
-    @DeleteMapping("/question/{id}")
+    @DeleteMapping(ApiKey.DIAGNOSTIC_QUESTION_ID)
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Delete question by id")
     @ApiResponses(value = {
@@ -243,7 +244,7 @@ public class DiagnosticController {
         return ResponseUtil.generateResponse("Question successfully deleted", HttpStatus.OK);
     }
 
-    @DeleteMapping("/answer/{id}")
+    @DeleteMapping(ApiKey.DIAGNOSTIC_ANSWER_ID)
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Delete answer by id")
     @ApiResponses(value = {
