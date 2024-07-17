@@ -4,17 +4,20 @@ import com.psychology.product.repository.dto.AnswerDTO;
 import com.psychology.product.repository.dto.DiagnosticDTO;
 import com.psychology.product.repository.dto.QuestionDTO;
 import com.psychology.product.repository.dto.DiagnosticResultDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface DiagnosticService {
     /**
-     * Retrieves all diagnostics.
+     * Retrieves a paginated list of diagnostics.
      *
-     * @return a list of DiagnosticDTO objects
+     * @param pageable the pagination information
+     * @return a paginated list of DiagnosticDTO objects
      */
-    List<DiagnosticDTO> getAllDiagnostics();
+    Page<DiagnosticDTO> getAllDiagnostics(Pageable pageable);
 
     /**
      * Retrieves a diagnostic by its unique identifier.
@@ -35,7 +38,7 @@ public interface DiagnosticService {
     /**
      * Modifies an existing diagnostic.
      *
-     * @param id the unique identifier of the diagnostic to be modified
+     * @param id                the unique identifier of the diagnostic to be modified
      * @param diagnosticRequest the DiagnosticDTO object containing updated diagnostic details
      * @return the modified DiagnosticDTO object
      */
@@ -52,7 +55,7 @@ public interface DiagnosticService {
     /**
      * Modifies an existing answer.
      *
-     * @param id the unique identifier of the answer to be modified
+     * @param id            the unique identifier of the answer to be modified
      * @param answerRequest the AnswerDTO object containing updated answer details
      * @return the modified DiagnosticDTO object containing the updated answer
      */
@@ -69,7 +72,7 @@ public interface DiagnosticService {
     /**
      * Modifies an existing question.
      *
-     * @param id the unique identifier of the question to be modified
+     * @param id              the unique identifier of the question to be modified
      * @param questionRequest the QuestionDTO object containing updated question details
      * @return the modified DiagnosticDTO object containing the updated question
      */

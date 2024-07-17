@@ -12,6 +12,8 @@ import com.psychology.product.util.exception.ConflictException;
 import com.psychology.product.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,9 +36,9 @@ public class DiagnosticServiceImpl implements DiagnosticService {
     private final DiagnosticResultMapper diagnosticResultMapper;
 
     @Override
-    public List<DiagnosticDTO> getAllDiagnostics() {
-        List<Diagnostic> diagnosticList = diagnosticRepository.findAll();
-        return diagnosticMapper.toDTO(diagnosticList);
+    public Page<DiagnosticDTO> getAllDiagnostics(Pageable pageable) {
+        Page<Diagnostic> diagnostics = diagnosticRepository.findAll(pageable);
+        return diagnosticMapper.toDTO(diagnostics);
     }
 
     public DiagnosticDTO getDiagnosticById(UUID id) {
