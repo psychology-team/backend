@@ -1,5 +1,6 @@
 package com.psychology.product.controller;
 
+import com.psychology.product.constant.ApiKey;
 import com.psychology.product.repository.dto.UserDTO;
 import com.psychology.product.service.AdminService;
 import com.psychology.product.service.UserService;
@@ -21,7 +22,7 @@ import java.util.UUID;
 
 @Hidden
 @RestController
-@RequestMapping("/admin")
+@RequestMapping(ApiKey.ADMIN)
 @RequiredArgsConstructor
 @Tag(name = "Admin Controller", description = "Endpoints for working with admin")
 public class AdminController {
@@ -29,7 +30,7 @@ public class AdminController {
     private final UserService userService;
     private final AdminService adminService;
 
-    @GetMapping("/clients-all")
+    @GetMapping(ApiKey.ADMIN_CLIENTS_ALL)
     @PreAuthorize("hasAuthority('ADMIN')")
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Get all clients")
@@ -43,7 +44,7 @@ public class AdminController {
         return ResponseUtil.generateResponse("Users success returned", HttpStatus.OK, allUsers);
     }
 
-    @GetMapping("/client/{id}")
+    @GetMapping(ApiKey.ADMIN_CLIENT_ID)
     @PreAuthorize("hasAuthority('ADMIN')")
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Get client")
@@ -57,7 +58,7 @@ public class AdminController {
         return ResponseUtil.generateResponse("Show client details", HttpStatus.OK, user);
     }
 
-    @PutMapping("/client/{id}")
+    @PutMapping(ApiKey.ADMIN_CLIENT_ID)
     @PreAuthorize("hasAuthority('ADMIN')")
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Disable client")
@@ -71,7 +72,7 @@ public class AdminController {
         return ResponseUtil.generateResponse("User was disabled.", HttpStatus.OK);
     }
 
-    @DeleteMapping("/client/{id}")
+    @DeleteMapping(ApiKey.ADMIN_CLIENT_ID)
     @PreAuthorize("hasAuthority('ADMIN')")
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Delete client")

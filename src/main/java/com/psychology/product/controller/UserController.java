@@ -1,6 +1,7 @@
 package com.psychology.product.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.psychology.product.constant.ApiKey;
 import com.psychology.product.controller.request.ForgotPasswordRequest;
 import com.psychology.product.repository.dto.UserDTO;
 import com.psychology.product.service.UserService;
@@ -20,7 +21,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping(ApiKey.USERS)
 @Slf4j
 @AllArgsConstructor
 @Tag(name = "User Controller", description = "Endpoints for working with user")
@@ -29,7 +30,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/profile")
+    @GetMapping(ApiKey.USERS_PROFILE)
     @JsonView(JsonViews.UserView.class)
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @SecurityRequirement(name = "Bearer Authentication")
@@ -44,7 +45,7 @@ public class UserController {
         return ResponseUtil.generateResponse("User success getting", HttpStatus.OK, user);
     }
 
-    @PutMapping("/profile")
+    @PutMapping(ApiKey.USERS_PROFILE)
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @JsonView(JsonViews.UserView.class)
     @SecurityRequirement(name = "Bearer Authentication")
@@ -60,7 +61,7 @@ public class UserController {
         return ResponseUtil.generateResponse("User success updated", HttpStatus.OK, user);
     }
 
-    @DeleteMapping("/profile")
+    @DeleteMapping(ApiKey.USERS_PROFILE)
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Disable user")
@@ -74,7 +75,7 @@ public class UserController {
         return ResponseUtil.generateResponse("User was disabled.", HttpStatus.OK);
     }
 
-    @PostMapping("/password/forgot")
+    @PostMapping(ApiKey.USERS_PASSWORD_FORGOT)
     @Operation(description = "Send a unique code to user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Ok"),
