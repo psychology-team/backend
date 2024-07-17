@@ -38,7 +38,7 @@ public interface DiagnosticService {
     /**
      * Modifies an existing diagnostic.
      *
-     * @param id                the unique identifier of the diagnostic to be modified
+     * @param id the unique identifier of the diagnostic to be modified
      * @param diagnosticRequest the DiagnosticDTO object containing updated diagnostic details
      * @return the modified DiagnosticDTO object
      */
@@ -55,7 +55,7 @@ public interface DiagnosticService {
     /**
      * Modifies an existing answer.
      *
-     * @param id            the unique identifier of the answer to be modified
+     * @param id the unique identifier of the answer to be modified
      * @param answerRequest the AnswerDTO object containing updated answer details
      * @return the modified DiagnosticDTO object containing the updated answer
      */
@@ -72,7 +72,7 @@ public interface DiagnosticService {
     /**
      * Modifies an existing question.
      *
-     * @param id              the unique identifier of the question to be modified
+     * @param id the unique identifier of the question to be modified
      * @param questionRequest the QuestionDTO object containing updated question details
      * @return the modified DiagnosticDTO object containing the updated question
      */
