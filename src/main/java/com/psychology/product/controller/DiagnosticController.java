@@ -50,7 +50,7 @@ public class DiagnosticController {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
-    public ResponseEntity<?> getAllDiagnostics(@PageableDefault(size = 10) Pageable pageable) {
+    public ResponseEntity<?> getAllDiagnostics(@PageableDefault(size = 10, page = 0) Pageable pageable) {
         Page<DiagnosticDTO> diagnostic = diagnosticService.getAllDiagnostics(pageable);
         return ResponseUtil.generateResponse("Successfully return diagnostics", HttpStatus.OK, diagnostic.getContent());
     }
