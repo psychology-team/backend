@@ -64,8 +64,9 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers(HttpMethod.POST, "/auth/").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/**").permitAll()
                         .requestMatchers( "/user/**").authenticated()
+                        .requestMatchers("/user/password/forgot").permitAll()
                         .anyRequest().permitAll()
                 )
                 .httpBasic(withDefaults());

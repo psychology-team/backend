@@ -2,8 +2,15 @@ package com.psychology.product.data;
 
 import com.psychology.product.controller.request.LoginRequest;
 import com.psychology.product.controller.request.SignUpRequest;
+import org.springframework.beans.factory.annotation.Value;
 
 public class UserData {
+
+    @Value("$jwt.secret.access")
+    public static String jwtAccessToken;
+
+    @Value("$jwt.secret.refresh")
+    public static String jwtRefreshToken;
 
     public static SignUpRequest getValidSignUpRequest() {
         return new SignUpRequest(getValidFirstName(), getValidLastName(), getValidEmail(), getValidPassword(), getValidPhoneNumber());
@@ -47,10 +54,6 @@ public class UserData {
 
     public static String getEmptyData() {
         return "";
-    }
-
-    public static String getNullData() {
-        return null;
     }
 
 }
