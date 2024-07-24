@@ -13,7 +13,7 @@ public class DiagnosticResultMapperImpl implements DiagnosticResultMapper {
 
     @Override
     public DiagnosticResultDTO toDTO(DiagnosticResult result) {
-        if ( result == null ) {
+        if (result == null) {
             return null;
         }
 
@@ -23,18 +23,18 @@ public class DiagnosticResultMapperImpl implements DiagnosticResultMapper {
         UUID userId = result.getUser().getId();
         UUID diagnosticId = result.getDiagnostic().getDiagnosticId();
 
-        return new DiagnosticResultDTO( userId, diagnosticId, interpretationPoints, scalePoints );
+        return new DiagnosticResultDTO(userId, diagnosticId, interpretationPoints, scalePoints);
     }
 
     @Override
     public List<DiagnosticResultDTO> toDTO(List<DiagnosticResult> results) {
-        if ( results == null ) {
+        if (results == null) {
             return null;
         }
 
         List<DiagnosticResultDTO> list = new ArrayList<>(results.size());
-        for ( DiagnosticResult diagnosticResult : results ) {
-            list.add( toDTO(diagnosticResult) );
+        for (DiagnosticResult diagnosticResult : results) {
+            list.add(toDTO(diagnosticResult));
         }
 
         return list;

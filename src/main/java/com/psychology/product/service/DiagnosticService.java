@@ -4,17 +4,20 @@ import com.psychology.product.repository.dto.AnswerDTO;
 import com.psychology.product.repository.dto.DiagnosticDTO;
 import com.psychology.product.repository.dto.QuestionDTO;
 import com.psychology.product.repository.dto.DiagnosticResultDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface DiagnosticService {
     /**
-     * Retrieves all diagnostics.
+     * Retrieves a paginated list of diagnostics.
      *
-     * @return a list of DiagnosticDTO objects
+     * @param pageable the pagination information
+     * @return a paginated list of DiagnosticDTO objects
      */
-    List<DiagnosticDTO> getAllDiagnostics();
+    Page<DiagnosticDTO> getAllDiagnostics(Pageable pageable);
 
     /**
      * Retrieves a diagnostic by its unique identifier.

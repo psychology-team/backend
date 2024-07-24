@@ -19,6 +19,9 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -47,9 +50,9 @@ public class DiagnosticController {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
-    public ResponseEntity<?> getAllDiagnostics() {
-        List<DiagnosticDTO> diagnostic = diagnosticService.getAllDiagnostics();
-        return ResponseUtil.generateResponse("Successfully return diagnostics", HttpStatus.OK, diagnostic);
+    public ResponseEntity<?> getAllDiagnostics(@PageableDefault(size = 10, page = 0) Pageable pageable) {
+        Page<DiagnosticDTO> diagnostic = diagnosticService.getAllDiagnostics(pageable);
+        return ResponseUtil.generateResponse("Successfully return diagnostics", HttpStatus.OK, diagnostic.getContent());
     }
 
     @GetMapping(ApiKey.DIAGNOSTIC_ID)
