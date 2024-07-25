@@ -23,9 +23,10 @@ jobs:
           java-version: 17
       - name: Set executable permission f or gradlew
         run: chmod +x gradlew
+      - name: Use secret API key
+        run: echo "EMAIL_HOST=${{ secrets.EMAIL_HOST }}"
       - name: Test with Gradle
         uses: gradle/gradle-build-action@v2.11.1
         with:
           arguments: --stacktrace --info test
-      - name: Use secret API key
-        run: echo "EMAIL_HOST=${{ secrets.EMAIL_HOST }}"
+
