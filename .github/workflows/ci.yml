@@ -1,4 +1,4 @@
-name: "Continious Integration"
+name: "Continuous Integration"
 
 on:
   push:
@@ -14,6 +14,23 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       !contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.pull_request.title, '[ci skip]')
+    env:
+      DB_SOURCE: ${{ secrets.DB_SOURCE }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      JWT_TOKEN_SECRET_ACCESS: ${{ secrets.JWT_TOKEN_SECRET_ACCESS }}
+      JWT_TOKEN_SECRET_REFRESH: ${{ secrets.JWT_TOKEN_SECRET_REFRESH }}
+      JWT_TOKEN_SECRET_ACCESS_TIME: ${{ secrets.JWT_TOKEN_SECRET_ACCESS_TIME }}
+      JWT_TOKEN_SECRET_REFRESH_TIME: ${{ secrets.JWT_TOKEN_SECRET_REFRESH_TIME }}
+      EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
+      EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
+      YOUR_EMAIL: ${{ secrets.YOUR_EMAIL }}
+      EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+      APPLICATION_NAME: ${{ secrets.APPLICATION_NAME }}
+      SERVER_HOST: ${{ secrets.SERVER_HOST }}
+      SERVER_PORT: ${{ secrets.SERVER_PORT }}
+      USER_EXPIRATION_TIME: ${{ secrets.USER_EXPIRATION_TIME }}
+      SCHEDULE_TIME: ${{ secrets.SCHEDULE_TIME }}
     steps:
       - uses: actions/checkout@v4.1.1
       - name: Set up JDK 21
@@ -21,12 +38,12 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
-      - name: Set executable permission f or gradlew
+      - name: Set executable permission for gradlew
         run: chmod +x gradlew
-      - name: Use secret API key
-        run: echo "EMAIL_HOST=${{ secrets.EMAIL_HOST }}"
       - name: Test with Gradle
         uses: gradle/gradle-build-action@v2.11.1
         with:
           arguments: --stacktrace --info test
-
+      - name: Print environment variables
+        run: |
+          echo "EMAIL_HOST=${EMAIL_HOST}"
