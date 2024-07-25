@@ -28,4 +28,4 @@ jobs:
         with:
           arguments: --stacktrace --info test
       - name: Use secret API key
-        run: echo "EMAIL_HOST=${{ secrets.EMAIL>HOST }}"
+        run: echo "EMAIL_HOST=${{ secrets.EMAIL_HOST }}"
