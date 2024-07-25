@@ -15,10 +15,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ScheduledRevokedChecker {
     private final UserRepository userRepository;
-    @Value("${application.user.expiration.timeMs}")
+    @Value("${application.user.expiration.time}")
     private long expirationTime;
 
-    @Scheduled(fixedRateString = "${application.daemon.schedule.repeatTimeMs}")
+    @Scheduled(fixedRateString = "${application.daemon.schedule.repeatTime}")
     private void checkRevokedUserExpiration() {
         getExpirationUsers().ifPresent(userRepository::deleteAll);
     }
