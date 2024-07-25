@@ -27,3 +27,5 @@ jobs:
         uses: gradle/gradle-build-action@v2.11.1
         with:
           arguments: --stacktrace --info test
+      - name: Use secret API key
+        run: echo "EMAIL_HOST=${{ secrets.EMAIL>HOST }}"
