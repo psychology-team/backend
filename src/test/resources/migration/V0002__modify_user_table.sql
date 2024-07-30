@@ -1,0 +1,2 @@
+ALTER TABLE users
+    ADD COLUMN unique_code VARCHAR(20) UNIQUE;

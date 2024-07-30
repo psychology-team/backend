@@ -2,14 +2,13 @@ package com.psychology.product;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.context.annotation.Profile;
 
 @SpringBootTest
-@TestPropertySource(locations = "classpath:application-testing.properties")
+@Profile("test")
 class ProductApplicationTests {
 
     @Test
     void contextLoads() {
     }
-
 }
