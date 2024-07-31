@@ -1,43 +1,61 @@
 package com.psychology.product.config;
 
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
-import io.swagger.v3.oas.annotations.info.Contact;
-import io.swagger.v3.oas.annotations.info.Info;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.security.SecurityScheme;
-import io.swagger.v3.oas.annotations.servers.Server;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.servers.Server;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-@OpenAPIDefinition(
-        info = @Info(
-                contact = @Contact(
-                        name = "${developer.contact.names}",
-                        email = "${developer.contact.email}",
-                        url = "${application.server.host}:${application.server.port}"
-                ),
-                description = "OpenApi documentation for Spring Security",
-                title = "OpenApi specification - ${application.name}",
-                version = "1.0"
-        ),
-        servers = {
-                @Server(
-                        description = "${application.name}",
-                        url = "${application.server.host}:${application.server.port}"
-                ),
-        },
-        security = {
-                @SecurityRequirement(
-                        name = "Bearer Authentication"
-                )
-        }
-)
-@SecurityScheme(
-        name = "Bearer Authentication",
-        scheme = "bearer",
-        type = SecuritySchemeType.HTTP,
-        bearerFormat = "JWT",
-        in = SecuritySchemeIn.HEADER
-)
+@Configuration
 public class OpenApiConfig {
+
+    @Value("${developer.contact.names}")
+    private String contactName;
+
+    @Value("${developer.contact.email}")
+    private String contactEmail;
+
+    @Value("${application.server.host}")
+    private String serverHost;
+
+    @Value("${application.server.port}")
+    private String serverPort;
+
+    @Value("${application.name}")
+    private String applicationName;
+
+    @Bean
+    public OpenAPI customOpenApi() {
+        return new OpenAPI()
+                .info(new Info()
+                        .title("OpenApi specification - " + applicationName)
+                        .version("1.0")
+                        .description("OpenApi documentation for Spring Security")
+                        .contact(new Contact()
+                                .name(contactName)
+                                .email(contactEmail)
+                                .url(serverHost + ":" + serverPort)
+                        )
+                )
+                .addServersItem(new Server()
+                        .url(serverHost + ":" + serverPort)
+                        .description(applicationName)
+                )
+                .components(new Components()
+                        .addSecuritySchemes("Bearer Authentication",
+                                new SecurityScheme()
+                                        .name("Bearer Authentication")
+                                        .type(SecurityScheme.Type.HTTP)
+                                        .scheme("bearer")
+                                        .bearerFormat("JWT")
+                                        .in(SecurityScheme.In.HEADER)
+                        )
+                );
+    }
 }
+
+
