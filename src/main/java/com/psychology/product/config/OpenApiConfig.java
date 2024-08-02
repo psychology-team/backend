@@ -34,7 +34,7 @@ public class OpenApiConfig {
                 .info(new Info()
                         .title("OpenApi specification - " + applicationName)
                         .version("1.0")
-                        .description("OpenApi documentation for Spring Security")
+                        .description("OpenApi documentation for Rest API")
                         .contact(new Contact()
                                 .name(contactName)
                                 .email(contactEmail)
