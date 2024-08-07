@@ -1,5 +1,6 @@
 package com.psychology.product.config;
 
+import com.psychology.product.constant.ApiKey;
 import com.psychology.product.service.impl.UserDetailsServiceImpl;
 import com.psychology.product.service.jwt.AuthEntryPointJwt;
 import com.psychology.product.service.jwt.AuthTokenFilter;
@@ -55,6 +56,24 @@ public class SecurityConfiguration {
         return new AuthTokenFilter();
     }
 
+    private final String entireDirectory = "/**";
+
+    private final String[] SWAGGER_WHITELIST = {
+            "/v3/api-docs" + entireDirectory,
+            "/swagger-ui" + entireDirectory
+    };
+
+    private final String[] CLOSE_CONTROLLER_WHITELIST = {
+            ApiKey.DIAGNOSTIC + entireDirectory,
+            ApiKey.CARD + entireDirectory,
+            ApiKey.USERS + entireDirectory,
+            ApiKey.ADMIN + entireDirectory
+    };
+
+    private final String[] OPEN_CONTROLLER_WHITELIST = {
+            ApiKey.AUTH + entireDirectory
+    };
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -64,10 +83,10 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/**").permitAll()
-                        .requestMatchers( "/user/**").authenticated()
-                        .requestMatchers("/user/password/forgot").permitAll()
-                        .anyRequest().permitAll()
+                                .requestMatchers(SWAGGER_WHITELIST).permitAll()
+                                .requestMatchers(OPEN_CONTROLLER_WHITELIST).permitAll()
+                                .requestMatchers(CLOSE_CONTROLLER_WHITELIST).authenticated()
+                                .anyRequest().denyAll()
                 )
                 .httpBasic(withDefaults());
         return http.build();
