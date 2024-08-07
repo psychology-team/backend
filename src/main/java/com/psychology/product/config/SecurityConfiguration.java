@@ -56,7 +56,6 @@ public class SecurityConfiguration {
         return new AuthTokenFilter();
     }
 
-    //path="/**" matches any URL in the entire directory tree
     private final String entireDirectory = "/**";
 
     private final String[] SWAGGER_WHITELIST = {
