@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -22,13 +21,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping(ApiKey.CARD)
 @Slf4j
-@Tag(name = "Card Controller", description = "Endpoints works with associative cards")
+@Tag(name = "Card Controller", description = "Endpoints works with assogit ciative cards")
 @CrossOrigin(origins = "*")
 public class MacCardController {
     private final MacCardService macCardService;
 
 
-    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(ApiKey.CARD_CREATE)
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Create a new card")
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -37,7 +36,7 @@ public class MacCardController {
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
     })
     public ResponseEntity<?> createCard(
-            @RequestPart("images") List<String> images
+            @RequestBody List<String> images
     ) {
         macCardService.createCard(images);
         return ResponseUtil.generateResponse("Success", HttpStatus.CREATED);

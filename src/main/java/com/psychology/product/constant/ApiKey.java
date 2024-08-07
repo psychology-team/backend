@@ -19,6 +19,7 @@ public class ApiKey {
 
     // Card-related endpoint
     public static final String CARD = BASE_URL + "card"; // Base URL for card
+    public static final String CARD_CREATE = "/create"; // Base URL for card
 
     // Diagnostic-related endpoints
     public static final String DIAGNOSTIC = BASE_URL + "diagnostic"; // Base URL for diagnostic
