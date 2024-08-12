@@ -37,10 +37,11 @@ public class AdminServiceImpl implements AdminService {
         Optional<User> userOptional = adminRepository.findById(clientId);
         if (userOptional.isPresent()) {
             User user = adminRepository.getReferenceById(clientId);
-            if (user.getRevoked()) {
+            if (user.getRevoked() && !user.getEnabled()) {
                 throw new ConflictException("Client was disabled");
             }
             user.setRevoked(true);
+            user.setEnabled(false);
             adminRepository.save(user);
         }
     }
