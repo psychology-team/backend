@@ -16,8 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -30,8 +29,6 @@ import java.util.Set;
 
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
-@AutoConfigureMockMvc
 public class UserServiceTest {
 
     @InjectMocks
@@ -62,6 +59,7 @@ public class UserServiceTest {
 
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.initMocks(this);
         user = new User();
         user.setFirstName("Test");
         user.setLastName("Test");
@@ -81,7 +79,6 @@ public class UserServiceTest {
 
     @Test
     void findAllUsers_ShouldReturnListOfUserDTOs() {
-        // Arrange
         User user1 = new User();
         User user2 = new User();
         List<User> users = Arrays.asList(user1, user2);
@@ -89,10 +86,8 @@ public class UserServiceTest {
         when(userMapper.toDTO(user1)).thenReturn(mock(UserDTO.class));
         when(userMapper.toDTO(user2)).thenReturn(mock(UserDTO.class));
 
-        // Act
         List<UserDTO> userDTOs = userService.findAllUsers();
 
-        // Assert
         Assertions.assertEquals(2, userDTOs.size());
         verify(userRepository, times(1)).findAll();
         verify(userMapper, times(2)).toDTO(any(User.class));
@@ -100,13 +95,10 @@ public class UserServiceTest {
 
     @Test
     void findAllUsers_ShouldReturnEmptyList_WhenNoUsersExist() {
-        // Arrange
         when(userRepository.findAll()).thenReturn(List.of());
 
-        // Act
         List<UserDTO> result = userService.findAllUsers();
 
-        // Assert
         Assertions.assertEquals(0, result.size());
         verify(userRepository, times(1)).findAll();
         verify(userMapper, never()).toDTO(any(User.class));
@@ -114,36 +106,28 @@ public class UserServiceTest {
 
     @Test
     void findUserByEmail_ShouldReturnUser_WhenUserExists() {
-        // Arrange
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
-        // Act
         User foundUser = userService.findUserByEmail(user.getEmail());
 
-        // Assert
         Assertions.assertEquals(user, foundUser);
     }
 
     @Test
     void findUserByEmail_ShouldThrowNotFoundException_WhenUserDoesNotExist() {
-        // Arrange
         when(userRepository.findByEmail("nonexistent@test.com")).thenReturn(Optional.empty());
 
-        // Act & Assert
         Assertions.assertThrows(NotFoundException.class, () -> userService.findUserByEmail("nonexistent@test.com"));
     }
 
     @Test
     void getCurrentUser_ShouldReturnUserDTO_WhenUserExists() {
-        // Arrange
         when(jwtUtils.getEmailFromJwtToken("validToken123")).thenReturn(user.getEmail());
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(userMapper.toDTO(user)).thenReturn(userDTO);
 
-        // Act
         UserDTO result = userService.getCurrentUser();
 
-        // Assert
         Assertions.assertEquals(userDTO, result);
         verify(jwtUtils, times(1)).getEmailFromJwtToken("validToken123");
         verify(userRepository, times(1)).findByEmail(user.getEmail());
@@ -152,11 +136,9 @@ public class UserServiceTest {
 
     @Test
     void getCurrentUser_ShouldThrowNotFoundException_WhenUserDoesNotExist() {
-        // Arrange
         when(jwtUtils.getEmailFromJwtToken("validToken123")).thenReturn(user.getEmail());
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
 
-        // Act & Assert
         Assertions.assertThrows(NotFoundException.class, () -> userService.getCurrentUser());
         verify(jwtUtils, times(1)).getEmailFromJwtToken("validToken123");
         verify(userRepository, times(1)).findByEmail(user.getEmail());
@@ -165,24 +147,19 @@ public class UserServiceTest {
 
     @Test
     void createNewUser_ShouldCreateUser_WhenEmailIsNotInUse() throws MessagingException {
-        // Arrange
         when(userRepository.findByEmail(signUpRequest.email())).thenReturn(Optional.empty());
         when(passwordEncoder.encode(signUpRequest.password())).thenReturn("encodedPassword123");
 
-        // Act
         userService.createNewUser(signUpRequest);
 
-        // Assert
         verify(userRepository, times(1)).save(any(User.class));
         verify(mailService, times(1)).sendRegistrationMail(any(User.class));
     }
 
     @Test
     void createNewUser_ShouldThrowConflictException_WhenEmailIsInUse() throws MessagingException {
-        // Arrange
         when(userRepository.findByEmail(signUpRequest.email())).thenReturn(Optional.of(new User()));
 
-        // Act & Assert
         Assertions.assertThrows(ConflictException.class, () -> userService.createNewUser(signUpRequest));
         verify(userRepository, times(0)).save(any(User.class));
         verify(mailService, times(0)).sendRegistrationMail(any(User.class));
@@ -190,25 +167,20 @@ public class UserServiceTest {
 
     @Test
     void createNewUser_ShouldEncodePasswordCorrectly() throws MessagingException {
-        // Arrange
         when(userRepository.findByEmail(signUpRequest.email())).thenReturn(Optional.empty());
         when(passwordEncoder.encode(signUpRequest.password())).thenReturn("encodedPassword123");
 
-        // Act
         userService.createNewUser(signUpRequest);
 
-        // Assert
         verify(passwordEncoder, times(1)).encode(signUpRequest.password());
         verify(userRepository, times(1)).save(any(User.class));
     }
 
     @Test
     void createNewUser_ShouldSetUserFieldsCorrectly() throws MessagingException {
-        // Arrange
         when(userRepository.findByEmail(signUpRequest.email())).thenReturn(Optional.empty());
         when(passwordEncoder.encode(signUpRequest.password())).thenReturn("encodedPassword123");
 
-        // Capture the User object passed to save()
         doAnswer(invocation -> {
             User user = invocation.getArgument(0);
             Assertions.assertEquals(signUpRequest.firstName(), user.getFirstName());
@@ -224,25 +196,20 @@ public class UserServiceTest {
             return null;
         }).when(userRepository).save(any(User.class));
 
-        // Act
         userService.createNewUser(signUpRequest);
 
-        // Assert
         verify(userRepository, times(1)).save(any(User.class));
     }
 
     @Test
     void updateUser_ShouldUpdateUserDetails_WhenValidDataIsProvided() {
-        // Arrange
         userDTO = new UserDTO(user.getId(), "NewFirstName", "NewLastName", user.getEmail(), "1234567890", user.getEnabled(), user.getRevoked());
         when(jwtUtils.getEmailFromJwtToken("validToken123")).thenReturn(user.getEmail());
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(userMapper.toDTO(any(User.class))).thenReturn(userDTO);
 
-        // Act
         UserDTO result = userService.updateUser(userDTO);
 
-        // Assert
         verify(userRepository, times(1)).save(user);
         verify(userMapper, times(1)).toDTO(user);
 
@@ -255,17 +222,14 @@ public class UserServiceTest {
 
     @Test
     void updateUser_ShouldNotUpdateFields_WhenNullValuesAreProvided() {
-        // Arrange
         when(jwtUtils.getEmailFromJwtToken("validToken123")).thenReturn(user.getEmail());
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         UserDTO partialUpdateDTO = new UserDTO(user.getId(), null, null, user.getEmail(), null, user.getEnabled(), user.getRevoked());
 
         when(userMapper.toDTO(user)).thenReturn(partialUpdateDTO);
 
-        // Act
         UserDTO result = userService.updateUser(partialUpdateDTO);
 
-        // Assert
         verify(userRepository, times(1)).save(user);
         verify(userMapper, times(1)).toDTO(user);
 
@@ -278,11 +242,9 @@ public class UserServiceTest {
 
     @Test
     void updateUser_ShouldThrowException_WhenUserNotFound() {
-        // Arrange
         when(jwtUtils.getEmailFromJwtToken("validToken123")).thenReturn(user.getEmail());
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
 
-        // Act & Assert
         Assertions.assertThrows(NotFoundException.class, () -> userService.updateUser(userDTO));
 
         verify(userRepository, times(0)).save(any(User.class));
@@ -291,14 +253,11 @@ public class UserServiceTest {
 
     @Test
     void disableUser_ShouldDisableUser_WhenUserIsNotRevoked() {
-        // Arrange
         when(jwtUtils.getEmailFromJwtToken("validToken123")).thenReturn("test@test.com");
         when(userRepository.findByEmail("test@test.com")).thenReturn(java.util.Optional.of(user));
 
-        // Act
         userService.disableUser();
 
-        // Assert
         Assertions.assertTrue(user.getRevoked(), "User should be revoked");
         Assertions.assertNotNull(user.getRevokedTimestamp());
         verify(userRepository, times(1)).save(user);
@@ -306,29 +265,23 @@ public class UserServiceTest {
 
     @Test
     void disableUser_ShouldNotDisableUser_WhenUserIsAlreadyRevoked() {
-        // Arrange
         when(jwtUtils.getEmailFromJwtToken("validToken123")).thenReturn("test@test.com");
         when(userRepository.findByEmail("test@test.com")).thenReturn(java.util.Optional.of(user));
         user.setRevoked(true);
 
-        // Act
         userService.disableUser();
 
-        // Assert
         Assertions.assertTrue(user.getRevoked(), "User should remain revoked");
         verify(userRepository, never()).save(user);
     }
 
     @Test
     void activateUser_ShouldActivateUser_WhenCodeIsValid() {
-        // Arrange
         String validCode = "123456";
         when(userRepository.findByUniqueCode(validCode)).thenReturn(java.util.Optional.of(user));
 
-        // Act
         userService.activateUser(validCode);
 
-        // Assert
         Assertions.assertTrue(user.getEnabled(), "User should be enabled");
         Assertions.assertNull(user.getUniqueCode(), "Unique code should be cleared");
         verify(userRepository, times(1)).save(user);
@@ -336,24 +289,19 @@ public class UserServiceTest {
 
     @Test
     void activateUser_ShouldThrowNotFoundException_WhenCodeIsInvalid() {
-        // Arrange
         String invalidCode = "654321";
         when(userRepository.findByUniqueCode(invalidCode)).thenReturn(java.util.Optional.empty());
 
-        // Act & Assert
         Assertions.assertThrows(NotFoundException.class, () -> userService.activateUser(invalidCode));
         verify(userRepository, never()).save(any(User.class));
     }
 
     @Test
     void forgotPassword_ShouldGenerateUniqueCodeAndSendMail_WhenEmailIsValid() throws MessagingException {
-        // Arrange
         when(userRepository.findByEmail(forgotPasswordRequest.email())).thenReturn(Optional.of(user));
 
-        // Act
         userService.forgotPassword(forgotPasswordRequest);
 
-        // Assert
         Assertions.assertNotNull(user.getUniqueCode(), "Unique code should be generated");
         verify(userRepository, times(1)).save(user);
         verify(mailService, times(1)).sendResetPasswordMail(user);
@@ -361,10 +309,8 @@ public class UserServiceTest {
 
     @Test
     void forgotPassword_ShouldThrowNotFoundException_WhenEmailIsInvalid() throws MessagingException {
-        // Arrange
         when(userRepository.findByEmail(forgotPasswordRequest.email())).thenReturn(Optional.empty());
 
-        // Act & Assert
         Assertions.assertThrows(NotFoundException.class, () -> userService.forgotPassword(forgotPasswordRequest));
         verify(userRepository, never()).save(any(User.class));
         verify(mailService, never()).sendResetPasswordMail(any(User.class));
@@ -372,11 +318,9 @@ public class UserServiceTest {
 
     @Test
     void forgotPassword_ShouldThrowIllegalArgumentException_WhenMailServiceFails() throws MessagingException {
-        // Arrange
         when(userRepository.findByEmail(forgotPasswordRequest.email())).thenReturn(Optional.of(user));
         doThrow(new MessagingException()).when(mailService).sendResetPasswordMail(any(User.class));
 
-        // Act & Assert
         Assertions.assertThrows(IllegalArgumentException.class, () -> userService.forgotPassword(forgotPasswordRequest));
         verify(userRepository, times(1)).save(user);
     }
