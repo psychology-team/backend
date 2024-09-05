@@ -14,9 +14,11 @@ import jakarta.mail.MessagingException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -29,6 +31,7 @@ import java.util.Set;
 
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
     @InjectMocks
@@ -59,7 +62,6 @@ public class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
         user = new User();
         user.setFirstName("Test");
         user.setLastName("Test");
