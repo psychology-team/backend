@@ -168,9 +168,7 @@ public class AuthServiceTest {
 
         when(jwtUtils.validateJwtRefreshToken(refreshToken)).thenReturn(false);
 
-        AuthException exception = assertThrows(AuthException.class, () -> {
-            authService.getJwtRefreshToken(refreshToken);
-        });
+        AuthException exception = assertThrows(AuthException.class, () -> authService.getJwtRefreshToken(refreshToken));
 
         assertEquals("Invalid token", exception.getMessage());
 
