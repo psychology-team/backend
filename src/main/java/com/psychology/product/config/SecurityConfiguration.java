@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.RememberMeAuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -20,6 +21,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -31,6 +33,8 @@ public class SecurityConfiguration {
 
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthEntryPointJwt unauthorizedHandler;
+
+    private final String REMEMBER_ME_KEY = "uniqueAndSecretKey";
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
@@ -55,6 +59,7 @@ public class SecurityConfiguration {
         return new AuthTokenFilter();
     }
 
+
     private final String entireDirectory = "/**";
 
     private final String[] SWAGGER_WHITELIST = {
@@ -74,6 +79,18 @@ public class SecurityConfiguration {
     };
 
     @Bean
+    public TokenBasedRememberMeServices rememberMeServices() {
+        TokenBasedRememberMeServices rememberMeServices = new TokenBasedRememberMeServices(REMEMBER_ME_KEY, userDetailsService);
+        rememberMeServices.setTokenValiditySeconds(86400);
+        return rememberMeServices;
+    }
+
+    @Bean
+    public RememberMeAuthenticationProvider rememberMeAuthenticationProvider() {
+        return new RememberMeAuthenticationProvider(REMEMBER_ME_KEY);
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
@@ -82,12 +99,16 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .authorizeHttpRequests((authz) -> authz
-                                .requestMatchers(SWAGGER_WHITELIST).permitAll()
-                                .requestMatchers(OPEN_CONTROLLER_WHITELIST).permitAll()
-                                .requestMatchers(CLOSE_CONTROLLER_WHITELIST).authenticated()
-                                .anyRequest().denyAll()
+                        .requestMatchers(SWAGGER_WHITELIST).permitAll()
+                        .requestMatchers(OPEN_CONTROLLER_WHITELIST).permitAll()
+                        .requestMatchers(CLOSE_CONTROLLER_WHITELIST).authenticated()
+                        .anyRequest().denyAll()
                 )
-                .httpBasic(withDefaults());
+                .httpBasic(withDefaults())
+                .rememberMe((rememberMe) -> rememberMe
+                        .key(REMEMBER_ME_KEY)
+                        .rememberMeServices(rememberMeServices())
+                );
         return http.build();
     }
 }
