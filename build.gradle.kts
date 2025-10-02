@@ -3,38 +3,22 @@ plugins {
     id("org.springframework.boot") version "3.2.3"
     id("io.spring.dependency-management") version "1.1.4"
     id("io.freefair.lombok") version "8.4"
+    id("com.github.ben-manes.versions") version "0.51.0"
 }
 
 group = "com.psychology.product"
 version = "0.0.1"
 
 springBoot {
-    mainClass.set("com.psychology.product.ProductApplication")
+    mainClass.set("com.artur.hasparian.psychology.platform.PsychologyPlatformApplication")
 }
 
 repositories {
     mavenCentral()
 }
 
-sourceSets {
-    val dev by creating {
-        compileClasspath += main.get().output
-        runtimeClasspath += main.get().output
-    }
-}
-
-val devImplementation: Configuration by configurations.getting {
-    extendsFrom(configurations.implementation.get())
-}
-
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-}
-
-configurations {
-    compileOnly {
-        extendsFrom(configurations.annotationProcessor.get())
-    }
+    sourceCompatibility = JavaVersion.VERSION_21
 }
 
 dependencies {
@@ -92,36 +76,4 @@ dependencies {
 
     implementation("org.testng", "testng", "7.7.0")
 
-    devImplementation("org.testcontainers", "postgresql", "1.19.3")
-}
-
-tasks {
-    compileJava {
-        sourceCompatibility = "17"
-        targetCompatibility = "17"
-    }
-
-    bootJar {
-        archiveFileName.set("server.jar")
-    }
-
-    create("stage") {
-        dependsOn("bootJar")
-    }
-
-    create<org.springframework.boot.gradle.tasks.run.BootRun>("bootDevRun") {
-        group = "application"
-        mainClass.set("com.psychology.product.DevelopmentLauncher")
-        classpath(sourceSets["dev"].runtimeClasspath)
-        jvmArgs("-Dspring.profiles.active=development")
-    }
-
-    test {
-        useJUnitPlatform()
-        jvmArgs("-Dspring.profiles.active=testing")
-    }
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
 }

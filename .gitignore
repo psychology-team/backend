@@ -39,3 +39,4 @@ out/
 src/main/resources/application-user.properties
 logs
 .env
+.github

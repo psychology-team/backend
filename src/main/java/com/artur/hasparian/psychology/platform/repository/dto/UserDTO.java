@@ -1,0 +1,23 @@
+package com.artur.hasparian.psychology.platform.repository.dto;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.artur.hasparian.psychology.platform.util.JsonViews;
+
+import java.util.UUID;
+
+public record UserDTO(
+        @JsonView(JsonViews.UUID.class)
+        UUID id,
+        @JsonView(JsonViews.FirstName.class)
+        String firstName,
+        @JsonView(JsonViews.LastName.class)
+        String lastName,
+        @JsonView(JsonViews.Email.class)
+        String email,
+        @JsonView(JsonViews.Phone.class)
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        String phone,
+        Boolean enabled,
+        Boolean revoked) {
+}
